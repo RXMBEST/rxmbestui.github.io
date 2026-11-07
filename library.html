@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){var h=document.documentElement,L=2,P='neon',rm=matchMedia('(prefers-reduced-motion: reduce)').matches,s=null,p=null;
+try{s=localStorage.getItem('rxm.fx');p=localStorage.getItem('rxm.pal')}catch(e){}
+if(s!==null&&/^[012]$/.test(s))L=+s;else{s=null;if(rm)L=1;else{try{if((navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2))L=1}catch(e){}}}
+p='mono';
+var calm=rm&&L<2;h.setAttribute('data-pal',p);h.setAttribute('data-fx',L);if(calm)h.classList.add('calm');
+window.RXMFX={level:L,pal:p,calm:calm,rm:rm};})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RXM UI Library - User Guide</title>
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -100 200 200'%3E%3Ccircle r='96' fill='%23f5f5f9' stroke='%238b8b9e' stroke-width='4'/%3E%3Cpath d='M0-96A96 96 0 0 1 0 96A48 48 0 0 1 0 0A48 48 0 0 0 0-96Z'/%3E%3Ccircle cy='-48' r='13'/%3E%3Ccircle cy='48' r='13' fill='%23f5f5f9'/%3E%3C/svg%3E">
+<meta name="description" content="User guide for RXM UI Library: a Dynamic Island style Roblox UI with custom intros, icons and fonts.">
+<style>
+:root{
+  color-scheme: dark light;
+  --bg:#0b0b0f; --bg2:#101015; --card:#14141a; --line:#25252e; --text:#ececf2; --muted:#9a9aa8;
+  --accent:#f0f0f5; --accent-ink:#0b0b0f; --code-bg:#0d0d12; --hover:#1b1b23;
+  --kw:#ffffff; --str:#bdbdbd; --num:#dcdcdc; --com:#6f6f6f; --fn:#9e9e9e; --bi:#e8e8e8;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f5f5f8; --bg2:#ffffff; --card:#ffffff; --line:#dcdce4; --text:#17171c; --muted:#5c5c6a;
+    --accent:#17171c; --accent-ink:#ffffff; --code-bg:#f0f0f5; --hover:#ececf2;
+    --kw:#000000; --str:#4d4d4d; --num:#2e2e2e; --com:#8a8a8a; --fn:#1f1f1f; --bi:#3a3a3a;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--text)}
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:6px;background:#000;color:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12px}
+.pill i{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff;display:block}
+.search{flex:1;min-width:0;display:flex}
+.search input{width:100%;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font:inherit;font-size:14px;outline:none}
+.search input:focus{border-color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:36px}
+nav.side{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 96px);overflow:auto;padding:22px 0}
+nav.side a{display:block;text-decoration:none;color:var(--muted);padding:6px 10px;border-radius:8px;font-size:14px;border-left:2px solid transparent}
+nav.side a:hover{background:var(--hover);color:var(--text)}
+nav.side a.active{color:var(--text);border-left-color:var(--accent);background:var(--hover)}
+nav.side a.hide{display:none}
+main{min-width:0;padding:22px 0 80px}
+.hero{padding:18px 0 8px}
+.hero h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:0 0 10px}
+.hero p{color:var(--muted);margin:0 0 14px}
+.hero .cta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:9px 14px;font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.btn.solid{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.doc-section{padding:8px 0 18px;border-top:1px solid var(--line);margin-top:22px}
+.doc-section[hidden]{display:none}
+h2{font-size:24px;line-height:1.25;margin:20px 0 12px;position:relative}
+h3{font-size:17px;margin:26px 0 8px}
+h2 .anchor{position:absolute;left:-22px;color:var(--muted);text-decoration:none;opacity:0;font-weight:400}
+h2:hover .anchor{opacity:1}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:10px 0}
+li{margin:5px 0}
+code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.codeblock{margin:14px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--code-bg)}
+.codebar{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 14px;border-bottom:1px solid var(--line);background:var(--card);font-size:12px;color:var(--muted)}
+.copy{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--bg2);color:var(--text);border-radius:8px;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;min-height:32px}
+.copy:hover{background:var(--hover)}
+.copy.ok{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.codeblock pre{margin:0;padding:14px;overflow:auto;-webkit-overflow-scrolling:touch;tab-size:4}
+.codeblock pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.6;white-space:pre}
+.tk-kw{color:var(--kw)} .tk-str{color:var(--str)} .tk-num{color:var(--num)} .tk-com{color:var(--com);font-style:italic} .tk-fn{color:var(--fn)} .tk-bi{color:var(--bi)}
+.tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:12px;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--card);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+.empty{display:none;color:var(--muted);padding:30px 0;text-align:center}
+.totop{position:fixed;right:16px;bottom:16px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:18px;cursor:pointer;display:none}
+.totop.show{display:block}
+footer{border-top:1px solid var(--line);color:var(--muted);text-align:center;padding:22px 16px;font-size:13px}
+@media (max-width: 900px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:0}
+  nav.side{display:none}
+  h2 .anchor{display:none}
+  .brand span.t{display:none}
+}
+
+/* ===== Yin-Yang ===== */
+@keyframes spin{to{transform:rotate(360deg)}}
+:root{--glow:rgba(255,255,255,.28);--auraA:rgba(255,255,255,.5);--auraB:rgba(139,139,139,.55);--haloc:rgba(165,165,165,.22)}
+@media (prefers-color-scheme: light){:root{--glow:rgba(43,43,43,.3);--auraA:rgba(22,22,22,.35);--auraB:rgba(121,121,121,.45);--haloc:rgba(116,116,116,.2)}}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap,footer{position:relative;z-index:1}
+.pill svg{width:16px;height:16px;display:block;animation:spin 6s linear infinite;filter:drop-shadow(0 0 5px rgba(255,255,255,.6))}
+.prog{position:absolute;left:0;bottom:-1px;width:100%;height:2px;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--text),#8f8f8f)}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center;padding:26px 0 14px}
+.hero-t{min-width:0}
+.hero h1{background:linear-gradient(100deg,var(--text) 35%,var(--muted) 50%,var(--text) 65%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:100% 0}}
+.stage{position:relative;width:clamp(220px,30vw,330px);aspect-ratio:1;perspective:900px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tilt{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.tilt>*{position:absolute;pointer-events:none}
+.halo{inset:8%;border-radius:50%;background:radial-gradient(circle,var(--haloc),transparent 68%);animation:halo 4.5s ease-in-out infinite}
+@keyframes halo{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.2);opacity:1}}
+.aura{inset:-10%;border-radius:50%;background:conic-gradient(var(--auraA),transparent 30%,var(--auraB) 50%,transparent 75%,var(--auraA));filter:blur(18px);opacity:.8;-webkit-mask:radial-gradient(circle closest-side,transparent 72%,#000 82%,#000 88%,transparent 98%);mask:radial-gradient(circle closest-side,transparent 72%,#000 82%,#000 88%,transparent 98%);animation:spin 10s linear infinite}
+.ring{inset:0;width:100%;height:100%;color:var(--text);animation:spin 50s linear infinite reverse}
+.ring rect{fill:var(--text);opacity:.8}
+.yy{inset:15%;width:70%;height:70%;animation:spin 18s linear infinite;filter:drop-shadow(0 0 18px var(--glow)) drop-shadow(0 14px 26px rgba(0,0,0,.4))}
+.yy .da,.yy .db{transform-box:fill-box;transform-origin:center;animation:breathe 4s ease-in-out infinite}
+.yy .db{animation-delay:-2s}
+@keyframes breathe{50%{transform:scale(1.6)}}
+.sheen{inset:17.5%;border-radius:50%;background:radial-gradient(circle at 34% 26%,rgba(255,255,255,.5),rgba(255,255,255,0) 40%),radial-gradient(circle at 68% 76%,rgba(0,0,0,0) 48%,rgba(0,0,0,.4))}
+.intro{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-content:center;justify-items:center;gap:26px;transition:opacity .55s .4s,visibility 0s .95s;animation:introOut 0s 4.5s forwards}
+.intro.done{opacity:0;visibility:hidden;pointer-events:none}
+@keyframes introOut{to{opacity:0;visibility:hidden}}
+.iwrap{width:128px;height:128px;animation:iIn 1s cubic-bezier(.2,.8,.2,1) backwards;transition:transform .95s cubic-bezier(.6,0,.9,.35),opacity .5s .4s}
+.iwrap svg{width:100%;height:100%;display:block;animation:spin 2.2s cubic-bezier(.45,.05,.55,.95) infinite;filter:drop-shadow(0 0 24px var(--glow))}
+.intro.done .iwrap{transform:scale(34);opacity:0}
+.itxt{font-weight:700;font-size:13px;letter-spacing:.55em;padding-left:.55em;color:var(--muted);animation:iTx 1s .35s backwards;transition:opacity .3s}
+.intro.done .itxt{opacity:0}
+@keyframes iIn{from{transform:scale(.15) rotate(-180deg);opacity:0}}
+@keyframes iTx{from{opacity:0;letter-spacing:1em}}
+.totop{z-index:30;border:0;background:none;padding:0;border-radius:50%}
+.totop svg{width:100%;height:100%;display:block;filter:drop-shadow(0 0 8px var(--glow))}
+.totop:hover svg{animation:spin 1.2s linear infinite}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.stage{order:-1;justify-self:center;width:min(270px,72vw)}}
+@media (prefers-reduced-motion:reduce){.intro{display:none}.halo,.aura,.ring,.yy,.yy *,.pill svg,.hero h1,.totop:hover svg{animation:none!important}#fx{display:none}}
+
+/* ===== polish: efek & animasi (hitam-putih) ===== */
+:root{--ease:cubic-bezier(.2,.8,.2,1);--spot:255,255,255}
+@media (prefers-color-scheme:light){:root{--spot:0,0,0}}
+body{background-image:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(var(--spot),.06),transparent 60%);background-attachment:fixed}
+header.top{transition:box-shadow .4s,background .4s}
+header.top.sc{box-shadow:0 10px 40px -18px rgba(0,0,0,.6)}
+.prog{box-shadow:0 0 12px rgba(var(--spot),.7)}
+.pill{animation:pg 3.2s ease-in-out infinite}
+@keyframes pg{50%{box-shadow:0 0 18px -2px rgba(255,255,255,.35)}}
+.search{position:relative}
+.search .si{position:absolute;left:12px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--muted);pointer-events:none;transition:color .25s,transform .4s var(--ease)}
+.search input{padding-left:38px;padding-right:34px;transition:border-color .25s,box-shadow .4s var(--ease),background .25s}
+.search:hover input{border-color:color-mix(in srgb,var(--text) 40%,var(--line))}
+.search input:focus{box-shadow:0 0 0 4px rgba(var(--spot),.08),0 10px 34px -12px rgba(var(--spot),.3)}
+.search:focus-within .si{color:var(--text);transform:translateY(-50%) scale(1.18) rotate(-10deg)}
+.sk{position:absolute;right:10px;top:50%;transform:translateY(-50%);font:11px ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--muted);pointer-events:none;transition:opacity .2s}
+.search:focus-within .sk{opacity:0}
+@media (max-width:760px){.sk{display:none}}
+nav.side a{transition:background .25s,color .25s,transform .3s var(--ease),border-color .3s}
+nav.side a:hover{transform:translateX(4px)}
+.fxc{position:relative}
+.fxc::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(var(--spot),.09),transparent 65%);opacity:0;transition:opacity .35s}
+.fxc:hover::after{opacity:1}
+.btn{position:relative;overflow:hidden;transform:translate(var(--tx,0px),var(--ty,0px));transition:background .25s,transform .3s var(--ease),box-shadow .3s,border-color .25s}
+.btn:hover{transform:translate(var(--tx,0px),calc(var(--ty,0px) - 2px));box-shadow:0 12px 28px -14px rgba(var(--spot),.45)}
+.btn:active{transform:scale(.97)}
+.btn.solid:hover{box-shadow:0 0 26px -4px rgba(var(--spot),.5)}
+.rip{position:absolute;border-radius:50%;background:currentColor;opacity:.22;pointer-events:none;transform:scale(0);animation:rip .65s ease-out forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.hero-t > *{will-change:transform}
+h2::after{content:"";display:block;height:2px;width:0;margin-top:9px;background:linear-gradient(90deg,var(--accent),transparent);transition:width 1.1s .15s var(--ease)}
+h2.seen::after{width:72px}
+h2.pulse{animation:hp 1.4s ease-out}
+@keyframes hp{0%{text-shadow:0 0 0 transparent}25%{text-shadow:0 0 30px rgba(var(--spot),.6)}100%{text-shadow:0 0 0 transparent}}
+.doc-section.flt{animation:fu .6s var(--ease) both}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}}
+html.js .rv{opacity:0;transform:translateY(28px) scale(.985);filter:blur(4px);transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+html.js .rv.in{opacity:1;transform:none;filter:none}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:var(--hover)}
+code{transition:background .2s,border-color .2s}
+code:hover{border-color:color-mix(in srgb,var(--text) 35%,var(--line))}
+.totop.show{animation:pop .5s var(--ease)}
+@keyframes pop{from{transform:scale(.3) rotate(-120deg);opacity:0}}
+/* codebox */
+.codeblock{border-radius:14px;background:linear-gradient(180deg,rgba(var(--spot),.035),transparent 140px),var(--code-bg);box-shadow:0 22px 44px -28px rgba(0,0,0,.7);transition:border-color .35s,box-shadow .45s var(--ease),transform .45s var(--ease)}
+.codeblock:hover{border-color:color-mix(in srgb,var(--text) 38%,var(--line));box-shadow:0 26px 54px -26px rgba(var(--spot),.22);transform:translateY(-2px)}
+.codeblock::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;z-index:2;background:linear-gradient(90deg,transparent,rgba(var(--spot),.75),transparent);transform:translateX(-100%);animation:cs 6s ease-in-out infinite}
+@keyframes cs{0%,55%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.codebar{justify-content:flex-start;gap:10px;padding:7px 8px 7px 14px;background:linear-gradient(180deg,rgba(var(--spot),.05),transparent),var(--card)}
+.codebar::before{content:"";flex:none;width:9px;height:9px;border-radius:50%;background:var(--muted);opacity:.55;box-shadow:15px 0 0 var(--muted),30px 0 0 var(--muted);margin-right:34px}
+.codebar span{margin-right:auto;font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase}
+.copy{position:relative;overflow:hidden;transition:background .25s,color .25s,transform .25s var(--ease),border-color .25s}
+.copy:active{transform:scale(.94)}
+.copy::before{content:"";width:14px;height:14px;background:currentColor;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat;--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='11' height='11' rx='2'/%3E%3Cpath d='M5 15V6a2 2 0 0 1 2-2h9'/%3E%3C/svg%3E")}
+.copy.ok::before{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E");animation:pop .45s var(--ease)}
+.cbody{display:flex;position:relative;overflow:hidden;transition:max-height .6s var(--ease)}
+.gut{flex:none;padding:14px 12px 14px 14px;text-align:right;white-space:pre;user-select:none;color:var(--com);opacity:.6;font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;border-right:1px solid var(--line);background:rgba(var(--spot),.02)}
+.codeblock pre{flex:1;min-width:0}
+.codeblock pre code{display:block}
+.long:not(.open) .cbody::after{content:"";position:absolute;left:0;right:0;bottom:0;height:100px;background:linear-gradient(transparent,var(--code-bg));pointer-events:none}
+.more{position:relative;overflow:hidden;display:block;width:100%;border:0;border-top:1px solid var(--line);background:var(--card);color:var(--muted);padding:10px;font:inherit;font-size:12.5px;cursor:pointer;transition:background .25s,color .25s}
+.more:hover{background:var(--hover);color:var(--text)}
+.tk-kw{font-weight:700}.tk-bi{font-weight:600}.tk-fn{text-decoration:underline dotted;text-decoration-color:var(--com);text-underline-offset:3px}.tk-str{font-style:normal}
+@media (prefers-reduced-motion:reduce){html.js .rv{opacity:1;transform:none;filter:none;transition:none}h2::after{width:72px;transition:none}.codeblock::before,.pill{animation:none}.btn,.codeblock,nav.side a{transition:none}}
+
+/* ===== polish tahap 2 ===== */
+::selection{background:var(--text);color:var(--bg)}
+html{scrollbar-width:thin;scrollbar-color:var(--muted) transparent}
+h1,h2,h3{text-wrap:balance}p,li{text-wrap:pretty}
+.doc-section{border-top:0;position:relative}
+.doc-section::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--text),var(--line) 30%,transparent)}
+h2 .num{display:inline-grid;place-items:center;min-width:36px;height:34px;padding:0 8px;margin-right:12px;border:1px solid var(--line);border-radius:10px;font:700 14px ui-monospace,Menlo,monospace;background:var(--card);vertical-align:middle;position:relative;top:-2px;transition:transform .45s var(--ease),background .3s,color .3s}
+h2:hover .num{transform:rotate(-7deg) scale(1.1);background:var(--text);color:var(--bg)}
+.doc-section ul{list-style:none;padding-left:4px}
+.doc-section ul>li{position:relative;padding-left:22px;transition:transform .35s var(--ease)}
+.doc-section ul>li::before{content:"";position:absolute;left:4px;top:.66em;width:6px;height:6px;border-radius:50%;background:var(--text);transition:box-shadow .4s var(--ease),transform .4s var(--ease)}
+.doc-section ul>li:hover{transform:translateX(5px)}
+.doc-section ul>li:hover::before{box-shadow:0 0 0 5px rgba(var(--spot),.14);transform:scale(1.25)}
+tbody tr:nth-child(even):not(:hover){background:rgba(var(--spot),.03)}
+th{letter-spacing:.04em}
+p code,li code,td code{cursor:copy}
+p code:active,li code:active,td code:active{transform:scale(.94)}
+.stage{will-change:translate,scale,opacity}
+html{overflow-x:hidden;overscroll-behavior-x:none}body{overflow-x:clip;max-width:100%}
+.mus{position:fixed;left:calc(16px + env(safe-area-inset-left));bottom:calc(16px + env(safe-area-inset-bottom));z-index:41;width:46px;height:46px;border-radius:50%;padding:0;cursor:pointer;display:grid;place-items:center;color:var(--text);border:1.5px solid transparent;background:linear-gradient(var(--bg2),var(--bg2)) padding-box,linear-gradient(135deg,rgb(var(--p1)),rgb(var(--p2)),rgb(var(--p3))) border-box;box-shadow:0 10px 26px -10px rgba(var(--p1),.85),0 0 0 4px rgba(var(--p1),.07);transition:transform .3s,opacity .3s;-webkit-tap-highlight-color:transparent}
+.mus:active{transform:scale(.92)}
+.mus svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mus .s1{display:none}.mus.on .s1{display:block}.mus.on .s0{display:none}
+html.scrolling .mus{opacity:.45}
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));z-index:60;transform:translate(-50%,24px) scale(.9);opacity:0;pointer-events:none;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600;box-shadow:0 14px 40px -12px rgba(0,0,0,.6);transition:transform .45s var(--ease),opacity .3s}
+.toast.on{transform:translate(-50%,0) scale(1);opacity:1}
+.hero h1{filter:drop-shadow(0 6px 24px rgba(var(--spot),.12))}
+.hero .cta .btn{animation:bi .8s var(--ease) both}
+.hero .cta .btn:nth-child(2){animation-delay:.12s}
+@keyframes bi{from{opacity:0;transform:translateY(14px)}}
+@media (prefers-reduced-motion:reduce){.stage{will-change:auto}.hero .cta .btn,.toast{animation:none;transition:none}}
+
+/* ===== ULTRA FX: palet warna, aurora, kartu, efek ===== */
+@property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
+:root{--p1:255,255,255;--p2:190,190,204;--p3:122,122,138;--on:#0b0b0f;--kw:#ffffff;--str:#bdbdbd;--num:#dcdcdc;--fn:#9e9e9e;--bi:#e8e8e8;--com:#6f6f6f;--grid:rgba(255,255,255,.05);--vig:rgba(0,0,0,.55);--grainO:.05;--ba1:.14;--ba2:.10;--ba3:.09;--grad:linear-gradient(90deg,rgb(var(--p1)),rgb(var(--p2)),rgb(var(--p3)))}
+@media (prefers-color-scheme:light){:root{--p1:22,22,30;--p2:84,84,100;--p3:144,144,160;--on:#ffffff;--kw:#000000;--str:#4d4d4d;--num:#2e2e2e;--fn:#1f1f1f;--bi:#3a3a3a;--com:#8a8a8a;--grid:rgba(20,22,48,.05);--vig:rgba(70,70,100,.08);--grainO:.045;--ba1:.07;--ba2:.05;--ba3:.05}}
+body{background-image:radial-gradient(ellipse 90% 55% at 50% -12%,rgba(var(--p1),.10),transparent 62%),radial-gradient(ellipse 55% 40% at 105% 28%,rgba(var(--p2),.05),transparent 62%),radial-gradient(ellipse 55% 40% at -5% 78%,rgba(var(--p3),.05),transparent 62%);background-attachment:fixed}
+::selection{background:rgb(var(--p1));color:var(--on)}
+
+/* ---- background ---- */
+.bgfx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bgfx .grid{position:absolute;inset:-2px;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:56px 56px;-webkit-mask:radial-gradient(ellipse 80% 60% at 50% 20%,#000 0,transparent 74%);mask:radial-gradient(ellipse 80% 60% at 50% 20%,#000 0,transparent 74%)}
+.bgfx .blob{position:absolute;width:56vmax;height:56vmax;border-radius:50%;will-change:transform}
+.bgfx .b1{left:-20vmax;top:-26vmax;background:radial-gradient(circle,rgba(var(--p1),var(--ba1)),transparent 64%);animation:bf1 30s ease-in-out infinite alternate}
+.bgfx .b2{right:-24vmax;top:10vh;background:radial-gradient(circle,rgba(var(--p2),var(--ba2)),transparent 64%);animation:bf2 38s ease-in-out infinite alternate}
+.bgfx .b3{left:6vw;bottom:-38vmax;background:radial-gradient(circle,rgba(var(--p3),var(--ba3)),transparent 64%);animation:bf3 44s ease-in-out infinite alternate}
+@keyframes bf1{to{transform:translate(20vmax,14vmax) scale(1.2)}}
+@keyframes bf2{to{transform:translate(-16vmax,10vmax) scale(.85)}}
+@keyframes bf3{to{transform:translate(14vmax,-12vmax) scale(1.15)}}
+.bgfx .floor{position:absolute;left:-60%;right:-60%;bottom:-8vh;height:58vh;opacity:.26;transform:perspective(400px) rotateX(66deg);transform-origin:50% 100%;overflow:hidden;-webkit-mask:linear-gradient(to top,#000 6%,transparent 82%);mask:linear-gradient(to top,#000 6%,transparent 82%)}
+.bgfx .floor::before{content:"";position:absolute;left:0;right:0;top:-64px;bottom:0;background-image:linear-gradient(rgba(var(--p2),.9) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--p1),.8) 1px,transparent 1px);background-size:64px 64px;animation:flr 2.6s linear infinite}
+@keyframes flr{to{transform:translateY(64px)}}
+.bgfx .grain{position:absolute;inset:0;opacity:var(--grainO);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.bgfx .vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,transparent 52%,var(--vig))}
+
+/* ---- header ---- */
+.pill{box-shadow:0 0 0 1px rgba(var(--p1),.45),0 0 22px -4px rgba(var(--p1),.7);animation:pg2 3.2s ease-in-out infinite}
+@keyframes pg2{50%{box-shadow:0 0 0 1px rgba(var(--p2),.6),0 0 30px -2px rgba(var(--p2),.75)}}
+.pill svg{filter:drop-shadow(0 0 6px rgba(var(--p2),.9))}
+.prog{height:3px;background:var(--grad);box-shadow:0 0 14px rgba(var(--p2),.9),0 0 30px rgba(var(--p1),.6)}
+.search input:focus{border-color:rgb(var(--p1));box-shadow:0 0 0 4px rgba(var(--p1),.16),0 10px 34px -12px rgba(var(--p1),.6)}
+.search:focus-within .si{color:rgb(var(--p2))}
+.mnav{display:none}
+
+/* ---- hero ---- */
+.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:6px 14px 6px 11px;margin:0 0 14px;border:1px solid rgba(var(--p1),.4);border-radius:999px;background:linear-gradient(90deg,rgba(var(--p1),.16),rgba(var(--p2),.10));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--text)}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:rgb(var(--p2));animation:ping2 2.4s ease-out infinite}
+@keyframes ping2{0%{box-shadow:0 0 0 0 rgba(var(--p2),.65)}100%{box-shadow:0 0 0 11px rgba(var(--p2),0)}}
+.hero h1{font-size:clamp(30px,6.2vw,56px);letter-spacing:-.028em;line-height:1.06;background:linear-gradient(100deg,var(--text) 0%,var(--muted) 26%,var(--text) 50%,var(--muted) 76%,var(--text) 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shine2 8s linear infinite;filter:drop-shadow(0 6px 34px rgba(var(--p1),.22))}
+@keyframes shine2{to{background-position:200% 0}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 6px}
+.chips span{display:inline-flex;align-items:center;padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:linear-gradient(180deg,rgba(var(--spot),.07),rgba(var(--spot),.015));font-size:12.5px;color:var(--text);transition:transform .35s var(--ease),border-color .3s,box-shadow .35s}
+.chips span::before{content:"";width:6px;height:6px;margin-right:8px;border-radius:50%;background:rgb(var(--p1));box-shadow:0 0 8px rgba(var(--p1),.95)}
+.chips span:nth-child(3n+2)::before{background:rgb(var(--p2));box-shadow:0 0 8px rgba(var(--p2),.95)}
+.chips span:nth-child(3n)::before{background:rgb(var(--p3));box-shadow:0 0 8px rgba(var(--p3),.95)}
+.chips span:hover{transform:translateY(-3px);border-color:rgba(var(--p2),.7);box-shadow:0 12px 26px -12px rgba(var(--p2),.8)}
+.halo{background:radial-gradient(circle,rgba(var(--p1),.38),transparent 68%)}
+.aura{background:conic-gradient(rgba(var(--p1),.95),transparent 28%,rgba(var(--p2),.95) 50%,transparent 74%,rgba(var(--p3),.95));opacity:.9}
+.ring{color:rgb(var(--p2))}
+.ring rect{fill:rgb(var(--p2));opacity:.9}
+.yy{filter:drop-shadow(0 0 22px rgba(var(--p1),.65)) drop-shadow(0 0 64px rgba(var(--p2),.28)) drop-shadow(0 14px 26px rgba(0,0,0,.4))}
+.stage>.pulse{position:absolute;inset:16%;border-radius:50%;border:1.5px solid rgba(var(--p2),.75);pointer-events:none;opacity:0;animation:pr 4.8s cubic-bezier(.2,.6,.3,1) infinite}
+.stage>.pulse.p2{animation-delay:1.6s;border-color:rgba(var(--p1),.75)}
+.stage>.pulse.p3{animation-delay:3.2s;border-color:rgba(var(--p3),.75)}
+@keyframes pr{0%{transform:scale(.7);opacity:.95}70%{opacity:.3}100%{transform:scale(1.55);opacity:0}}
+.orb{inset:-5%;border-radius:50%;animation:spin 9s linear infinite}
+.orb::before{content:"";position:absolute;top:-5px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:rgb(var(--p2));box-shadow:0 0 14px 4px rgba(var(--p2),.8)}
+.orb.o2{inset:-13%;animation-duration:15s;animation-direction:reverse}
+.orb.o2::before{width:7px;height:7px;margin-left:-3.5px;top:-3.5px;background:rgb(var(--p3));box-shadow:0 0 12px 3px rgba(var(--p3),.75)}
+.orb.o3{inset:3%;animation-duration:6.5s}
+.orb.o3::before{width:6px;height:6px;margin-left:-3px;top:-3px;background:rgb(var(--p1));box-shadow:0 0 10px 3px rgba(var(--p1),.85)}
+.stage::after{content:"";position:absolute;left:14%;right:14%;bottom:-9%;height:12%;border-radius:50%;background:radial-gradient(ellipse,rgba(var(--p1),.5),transparent 70%);filter:blur(10px);pointer-events:none;animation:gl 4.5s ease-in-out infinite}
+@keyframes gl{50%{opacity:.45;transform:scaleX(.78)}}
+.term{margin:22px 0 4px;max-width:520px;border:1px solid rgba(var(--p1),.35);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,rgba(var(--p1),.10),transparent 60%),color-mix(in srgb,var(--code-bg) 94%,transparent);box-shadow:0 26px 60px -30px rgba(var(--p1),.8),inset 0 1px 0 rgba(255,255,255,.06)}
+.tbar{display:flex;align-items:center;gap:7px;padding:9px 14px;border-bottom:1px solid var(--line);font:600 11px ui-monospace,Menlo,monospace;color:var(--muted);letter-spacing:.06em}
+.tbar i{width:9px;height:9px;border-radius:50%;background:var(--text);opacity:.85}.tbar i:nth-child(2){opacity:.5}.tbar i:nth-child(3){opacity:.25}
+.tbar span{margin-left:8px}
+.term .tcode{margin:0;padding:14px 16px;min-height:134px;overflow:hidden;font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;color:var(--text)}
+.term .tcode code{background:none;border:0;padding:0;font:inherit;cursor:default}
+.caret{display:inline-block;width:7px;height:1.1em;margin-left:1px;vertical-align:-.18em;background:rgb(var(--p2));box-shadow:0 0 10px rgba(var(--p2),.9);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---- tombol ---- */
+.btn.solid{color:var(--on);border-color:transparent;background:linear-gradient(135deg,rgb(var(--p1)),rgb(var(--p2)));box-shadow:0 12px 32px -12px rgba(var(--p1),.9)}
+.btn.solid:hover{box-shadow:0 0 34px -4px rgba(var(--p2),.75),0 14px 34px -10px rgba(var(--p1),.9)}
+.btn.solid::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 32%,rgba(255,255,255,.55) 50%,transparent 68%);transform:translateX(-130%);animation:sweep 4.2s ease-in-out infinite;pointer-events:none}
+@keyframes sweep{0%,50%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+.btn:not(.solid):hover{border-color:rgba(var(--p2),.7);box-shadow:0 12px 28px -14px rgba(var(--p2),.7)}
+.copy.ok{background:var(--grad);border-color:transparent;color:var(--on)}
+
+/* ---- kartu fitur ---- */
+
+/* ---- sidebar + nav mobile ---- */
+nav.side{margin:22px 0;padding:10px;max-height:calc(100vh - 110px);border:1px solid var(--line);border-radius:20px;background:color-mix(in srgb,var(--card) 52%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 24px 56px -34px rgba(0,0,0,.75),inset 0 1px 0 rgba(var(--spot),.06);scrollbar-width:thin}
+nav.side a{border-radius:12px;border-left-width:3px}
+nav.side a.active{background:linear-gradient(90deg,rgba(var(--p1),.22),transparent);border-left-color:rgb(var(--p2));box-shadow:inset 14px 0 22px -18px rgba(var(--p2),.8)}
+
+/* ---- judul, kode, tabel ---- */
+h2{font-size:clamp(22px,3.6vw,29px);letter-spacing:-.012em}
+h2::after{background:var(--grad)!important;height:3px!important;border-radius:3px}
+h2.seen::after{width:96px!important}
+h2 .num{border:1px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box;box-shadow:0 0 22px -8px rgba(var(--p1),.8)}
+h2:hover .num{background:var(--grad);color:var(--on);border-color:transparent}
+h3::before{content:"";display:inline-block;width:20px;height:3px;margin-right:10px;vertical-align:5px;background:var(--grad);border-radius:3px}
+.doc-section::before{background:linear-gradient(90deg,rgb(var(--p1)),rgb(var(--p2)) 30%,transparent)}
+.doc-section ul>li::before{background:rgb(var(--p2));box-shadow:0 0 8px rgba(var(--p2),.8)}
+.doc-section ul>li:hover::before{box-shadow:0 0 0 5px rgba(var(--p2),.2),0 0 12px rgba(var(--p2),.9)}
+.codeblock{border:1px solid transparent;background:linear-gradient(180deg,rgba(var(--p1),.06),transparent 140px) padding-box,linear-gradient(var(--code-bg),var(--code-bg)) padding-box,conic-gradient(from var(--ang),var(--line),var(--line) 40%,rgb(var(--p1)) 56%,rgb(var(--p2)) 70%,rgb(var(--p3)) 84%,var(--line)) border-box}
+.codeblock:hover{border-color:transparent;animation:angspin 3.4s linear infinite;box-shadow:0 28px 60px -26px rgba(var(--p1),.7)}
+@keyframes angspin{to{--ang:360deg}}
+.codeblock::before{background:linear-gradient(90deg,transparent,rgba(var(--p2),.95),transparent)}
+.tablewrap{border-radius:16px;box-shadow:0 24px 48px -32px rgba(0,0,0,.7);background:color-mix(in srgb,var(--card) 38%,transparent)}
+th{background:linear-gradient(180deg,rgba(var(--p1),.14),rgba(var(--p1),.03)),var(--card);box-shadow:inset 0 -2px 0 rgba(var(--p1),.55)}
+tbody tr:hover{background:linear-gradient(90deg,rgba(var(--p1),.10),transparent)}
+code{background:linear-gradient(180deg,rgba(var(--p1),.07),transparent),var(--code-bg)}
+code:hover{border-color:rgba(var(--p2),.7)}
+.tk-kw,.tk-bi{text-shadow:0 0 12px currentColor}
+.totop svg{filter:drop-shadow(0 0 10px rgba(var(--p1),.9))}
+.toast{background:var(--grad);color:var(--on);box-shadow:0 14px 40px -12px rgba(var(--p1),.8)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgb(var(--p1)),rgb(var(--p2)));border-radius:10px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-track{background:transparent}
+html{scrollbar-color:rgb(var(--p1)) transparent}
+footer{position:relative;background:linear-gradient(transparent,rgba(var(--p1),.07));border-top:0}
+footer::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:.7}
+
+/* ---- tombol pengatur efek ---- */
+.fab{position:fixed;right:calc(16px + env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));z-index:41;width:46px;height:46px;border-radius:50%;padding:0;cursor:pointer;display:grid;place-items:center;color:var(--text);border:1.5px solid transparent;background:linear-gradient(var(--bg2),var(--bg2)) padding-box,linear-gradient(135deg,rgb(var(--p1)),rgb(var(--p2)),rgb(var(--p3))) border-box;box-shadow:0 10px 26px -10px rgba(var(--p1),.85),0 0 0 4px rgba(var(--p1),.07);transition:transform .3s var(--ease),opacity .3s,box-shadow .3s,color .3s;-webkit-tap-highlight-color:transparent}
+.fab:hover{transform:translateY(-2px)}
+.fab:active{transform:scale(.92)}
+.fab svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s var(--ease)}
+.fab[aria-expanded="true"]{background:var(--grad);color:var(--on);box-shadow:0 12px 30px -8px rgba(var(--p1),.95)}
+.fab[aria-expanded="true"] svg{transform:rotate(90deg) scale(1.08)}
+.fab:focus-visible,.seg button:focus-visible{outline:2px solid rgb(var(--p2));outline-offset:3px}
+.fxs{position:fixed;inset:0;z-index:39;background:rgba(3,4,10,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .3s}
+.fxs.on{opacity:1;pointer-events:auto}
+.fxp{position:fixed;right:calc(16px + env(safe-area-inset-right));bottom:calc(74px + env(safe-area-inset-bottom));z-index:40;width:min(320px,calc(100vw - 32px));padding:16px;border-radius:24px;border:1px solid rgba(var(--p1),.35);background:color-mix(in srgb,var(--card) 95%,transparent);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);box-shadow:0 30px 70px -20px rgba(0,0,0,.8),0 0 44px -16px rgba(var(--p1),.7);transform-origin:100% 100%;transform:scale(.9) translateY(14px);opacity:0;pointer-events:none;transition:transform .4s var(--ease),opacity .25s}
+.fxp.on{transform:none;opacity:1;pointer-events:auto}
+.fxh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.fxp h4{margin:0;font:700 11px ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fxb{font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:999px;color:var(--on);background:var(--grad)}
+.seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:4px;border-radius:14px;background:var(--bg2);border:1px solid var(--line)}
+.seg::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 20px)/3);border-radius:10px;background:var(--grad);box-shadow:0 8px 20px -8px rgba(var(--p1),.9);transform:translateX(calc(var(--i,0)*(100% + 6px)));transition:transform .4s var(--ease)}
+.seg button{position:relative;z-index:1;border:0;border-radius:10px;padding:10px 0;font-family:inherit;font-weight:600;font-size:12.5px;cursor:pointer;background:transparent;color:var(--muted);transition:color .25s;-webkit-tap-highlight-color:transparent}
+.seg button.on{color:var(--on)}
+.fxp p{margin:12px 2px 0;font-size:12.5px;line-height:1.5;color:var(--muted);min-height:3em}
+.totop{right:calc(16px + env(safe-area-inset-right));bottom:calc(74px + env(safe-area-inset-bottom));width:46px;height:46px;transition:opacity .3s}
+html.fxopen .totop{opacity:0!important;pointer-events:none}
+html.scrolling .fab:not([aria-expanded="true"]),html.scrolling .totop{opacity:.45}
+
+/* ---- tingkat efek ---- */
+html[data-fx="0"] .bgfx,html[data-fx="0"] #fx{display:none!important}
+html[data-fx="0"] .stage>.pulse,html[data-fx="0"] .orb,html[data-fx="0"] .btn.solid::before,html[data-fx="0"] .stage::after,html[data-fx="0"] .eyebrow i,html[data-fx="0"] .codeblock::before{animation:none!important}
+html[data-fx="1"] .bgfx .floor,html[data-fx="1"] .bgfx .grain,html[data-fx="1"] .stage>.pulse.p2,html[data-fx="1"] .stage>.pulse.p3{display:none}
+html.calm .bgfx .blob{animation-duration:120s}
+@media (prefers-reduced-motion:reduce){
+#fx{display:block}
+html[data-fx="0"] #fx{display:none!important}
+html:not([data-fx="2"]) .stage>.pulse,html:not([data-fx="2"]) .orb,html:not([data-fx="2"]) .btn.solid::before,html:not([data-fx="2"]) .stage::after,html:not([data-fx="2"]) .bgfx .floor::before,html:not([data-fx="2"]) .fab,html:not([data-fx="2"]) .pill,html:not([data-fx="2"]) .eyebrow i,html:not([data-fx="2"]) .hero h1{animation:none!important}
+html[data-fx="2"] .halo{animation:halo 4.5s ease-in-out infinite!important}
+html[data-fx="2"] .aura{animation:spin 10s linear infinite!important}
+html[data-fx="2"] .ring{animation:spin 50s linear infinite reverse!important}
+html[data-fx="2"] .yy{animation:spin 18s linear infinite!important}
+html[data-fx="2"] .yy .da,html[data-fx="2"] .yy .db{animation:breathe 4s ease-in-out infinite!important}
+html[data-fx="2"] .pill svg{animation:spin 6s linear infinite!important}
+html[data-fx="2"] .hero h1{animation:shine2 8s linear infinite!important}
+}
+
+/* ---- responsif ---- */
+@media (max-width:900px){
+html{scroll-padding-top:116px}
+.mnav{display:flex;gap:8px;overflow-x:auto;padding:0 16px 10px;max-width:1180px;margin:0 auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.mnav::-webkit-scrollbar{display:none}
+.mnav a{flex:none;text-decoration:none;color:var(--muted);font-size:12.5px;font-weight:600;padding:6px 13px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--card) 70%,transparent);transition:background .3s,color .3s,border-color .3s,transform .3s var(--ease)}
+.mnav a.on{color:var(--on);border-color:transparent;background:var(--grad);box-shadow:0 8px 22px -8px rgba(var(--p1),.9);transform:translateY(-1px)}
+}
+@media (max-width:760px){
+.bgfx .blob{width:80vmax;height:80vmax}
+.hero h1{font-size:clamp(28px,8.6vw,42px)}
+.term{max-width:none}
+.term .tcode{font-size:11.5px;min-height:128px}
+}
+.hero-t>p{color:color-mix(in srgb,var(--text) 78%,var(--muted));text-shadow:0 1px 14px rgba(0,0,0,.35)}
+@media (prefers-color-scheme:light){.hero-t>p{text-shadow:none}}
+@media (prefers-color-scheme:light){body{background-image:radial-gradient(ellipse 90% 55% at 50% -12%,rgba(var(--p1),.05),transparent 62%),radial-gradient(ellipse 55% 40% at 105% 28%,rgba(var(--p2),.04),transparent 62%)}}
+@media (prefers-color-scheme:light){.tk-kw,.tk-bi{text-shadow:none}}
+html.lite .bgfx .floor,html.lite .bgfx .grain,html.lite .bgfx .b3,html.lite .stage>.pulse.p2,html.lite .stage>.pulse.p3{display:none}
+@media (pointer:coarse){.bgfx .floor,.bgfx .grain{display:none}}
+</style>
+<style id="x2">
+.x2-spot{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:1;opacity:0;background:radial-gradient(circle,rgba(var(--spot),.12),rgba(var(--spot),.045) 42%,transparent 68%);transition:opacity .6s;will-change:transform}
+.x2-spot.on{opacity:1}
+.x2-ring{position:fixed;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;border:1.5px solid rgba(var(--spot),.9);box-shadow:0 0 18px rgba(var(--spot),.6);pointer-events:none;z-index:70}
+.x2-sp{position:fixed;left:0;top:0;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:rgb(var(--spot));box-shadow:0 0 10px rgba(var(--spot),.9);pointer-events:none;z-index:70}
+.doc-section>h2.seen .num{animation:x2num .95s var(--ease) both}
+@keyframes x2num{0%{transform:scale(.3) rotate(-140deg);opacity:0;box-shadow:0 0 0 0 rgba(var(--spot),.7)}55%{opacity:1}100%{transform:none;box-shadow:0 0 0 16px rgba(var(--spot),0)}}
+.doc-section ul.seen>li{animation:x2li .75s var(--ease) backwards;animation-delay:calc(var(--i,0)*55ms + 160ms)}
+@keyframes x2li{from{opacity:0;transform:translateX(-20px);filter:blur(5px)}}
+html[data-fx="0"] .x2-spot{display:none!important}
+@media (prefers-reduced-motion:reduce){.x2-spot{display:none}.doc-section>h2.seen .num,.doc-section ul.seen>li{animation:none}}
+</style>
+<style id="x3">
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@property --hx{syntax:'<percentage>';inherits:false;initial-value:20%}
+/* header: drifting colour glow + white light lines running along the top and bottom edge */
+header.top{background-image:radial-gradient(55% 140% at var(--hx) 0%,rgba(var(--p1),.2),transparent 72%),radial-gradient(45% 120% at calc(100% - var(--hx)) 100%,rgba(var(--p2),.16),transparent 72%);animation:x3hx 10s ease-in-out infinite alternate}
+@keyframes x3hx{to{--hx:80%}}
+header.top::before,header.top::after{content:"";position:absolute;left:0;right:0;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgb(var(--spot)),transparent) no-repeat,linear-gradient(90deg,transparent 2%,rgba(var(--p1),.55),rgba(var(--p2),.55),rgba(var(--p3),.55),transparent 98%);background-size:34% 100%,100% 100%;background-position:-40% 0,0 0;animation:x3run 3.4s linear infinite;filter:drop-shadow(0 0 4px rgba(var(--spot),.9))}
+header.top::before{top:0;animation-duration:4.8s;animation-direction:reverse}
+header.top::after{bottom:-1px}
+@keyframes x3run{to{background-position:140% 0,0 0}}
+/* search: glass pill with a white light orbiting its border */
+.search .si{left:17px;width:18px;height:18px;z-index:2}
+.search input{height:46px;border-radius:999px;padding:0 48px 0 46px;font-size:15px;letter-spacing:.2px;border:1px solid rgba(var(--spot),.14);background:linear-gradient(180deg,rgba(var(--spot),.07),rgba(var(--spot),.015)),color-mix(in srgb,var(--card) 86%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 rgba(var(--spot),.08),0 8px 24px -14px rgba(0,0,0,.7);transition:border-color .3s,box-shadow .45s var(--ease),transform .45s var(--ease),background .3s}
+.search input::placeholder{color:var(--muted);opacity:.85}
+.search input:focus{border-color:rgba(var(--spot),.45);transform:translateY(-1px);box-shadow:0 0 0 4px rgba(var(--p1),.16),0 14px 40px -12px rgba(var(--p1),.65),inset 0 1px 0 rgba(var(--spot),.12)}
+.search::before{content:"";position:absolute;inset:0;border-radius:999px;padding:1.5px;pointer-events:none;z-index:3;background:conic-gradient(from var(--ang),transparent 0 62%,rgba(var(--p2),.7) 80%,rgb(var(--spot)) 92%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:x3ang 3.6s linear infinite;filter:drop-shadow(0 0 5px rgba(var(--spot),.65))}
+.search.has::before{animation-duration:1.4s}
+.search:focus-within::before{animation-duration:2s;background:conic-gradient(from var(--ang),rgba(var(--p1),.35),rgba(var(--p2),.95) 35%,rgb(var(--spot)) 50%,rgba(var(--p3),.95) 65%,rgba(var(--p1),.35))}
+@keyframes x3ang{to{--ang:360deg}}
+.sk{right:16px;border-radius:7px;background:rgba(var(--spot),.07);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.search input::-webkit-search-cancel-button{-webkit-appearance:none;width:18px;height:18px;margin-right:2px;cursor:pointer;opacity:.7;background:no-repeat center/18px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='10' fill='%23ffffff22' stroke='none'/%3E%3Cpath d='m8.5 8.5 7 7m0-7-7 7'/%3E%3C/svg%3E")}
+/* chips + brand */
+.mnav a{position:relative;overflow:hidden;animation:x3chip .65s var(--ease) backwards;animation-delay:calc(var(--i,0)*60ms + .2s)}
+@keyframes x3chip{from{opacity:0;transform:translateY(12px) scale(.9)}}
+.mnav a:active{transform:scale(.94)}
+.mnav a.on::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:x3shine 2.8s ease-in-out infinite}
+@keyframes x3shine{0%,55%{left:-60%}100%{left:130%}}
+.brand .pill svg{animation:x3rot 14s linear infinite}
+@keyframes x3rot{to{transform:rotate(360deg)}}
+html[data-fx="0"] header.top,html[data-fx="0"] header.top::before,html[data-fx="0"] header.top::after,html[data-fx="0"] .search::before,html[data-fx="0"] .mnav a,html[data-fx="0"] .mnav a.on::after,html[data-fx="0"] .brand .pill svg{animation:none}
+@media (prefers-reduced-motion:reduce){header.top,header.top::before,header.top::after,.search::before,.mnav a,.mnav a.on::after,.brand .pill svg{animation:none}}
+</style>
+<style id="x4">
+/* tidy section header: even spacing, badge + title aligned in a grid, full-width rule that draws in */
+.doc-section{margin-top:40px;padding:30px 0 16px}
+.doc-section::before{height:1px;background:linear-gradient(90deg,transparent,rgb(var(--spot)),transparent) no-repeat,linear-gradient(90deg,rgb(var(--p1)),rgb(var(--p2)) 35%,transparent 85%);background-size:30% 100%,100% 100%;background-position:-40% 0,0 0;filter:drop-shadow(0 0 4px rgba(var(--spot),.8))}
+.doc-section:has(>h2.seen)::before{animation:x4run 2.6s .25s ease-out both}
+@keyframes x4run{to{background-position:140% 0,0 0}}
+.doc-section>h2{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:14px;margin:0 0 22px}
+.doc-section>h2 .num{grid-column:1;margin:0;top:0;min-width:42px;height:42px;border-radius:13px;font-size:15px}
+.doc-section>h2 .num::before{content:"";position:absolute;inset:-2px;border-radius:15px;padding:1.5px;pointer-events:none;background:conic-gradient(from var(--ang),transparent 0 68%,rgb(var(--spot)) 95%,transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:x3ang 3.2s linear infinite}
+.doc-section>h2 .ht{grid-column:2;min-width:0;overflow-wrap:anywhere}
+.doc-section>h2.seen .ht{animation:x4ht 1s .12s var(--ease) both}
+@keyframes x4ht{from{opacity:0;transform:translateX(-14px);filter:blur(8px);clip-path:inset(0 100% 0 0)}to{opacity:1;transform:none;filter:blur(0);clip-path:inset(-10% -2% -10% -2%)}}
+.doc-section>h2::after{grid-column:1/-1;display:block;width:auto!important;height:2px!important;margin-top:16px;border-radius:2px;background:linear-gradient(90deg,rgba(var(--p1),.9),rgba(var(--p2),.55) 45%,transparent)!important;transform:scaleX(0);transform-origin:0 50%;transition:transform 1.2s .2s var(--ease)}
+.doc-section>h2.seen::after{width:auto!important;transform:scaleX(1)}
+@media (max-width:520px){.doc-section>h2 .num{min-width:38px;height:38px;font-size:14px}.doc-section>h2{column-gap:12px}}
+html[data-fx="0"] .doc-section::before,html[data-fx="0"] .doc-section>h2 .num::before,html[data-fx="0"] .doc-section>h2 .ht{animation:none}
+@media (prefers-reduced-motion:reduce){.doc-section::before,.doc-section>h2 .num::before,.doc-section>h2 .ht{animation:none}.doc-section>h2::after{transform:none;transition:none}}
+/* touch screens keep :hover after a tap - that left a big bright glow under code blocks and stuck effects on headings/lists */
+.codeblock:hover{box-shadow:0 18px 40px -28px rgba(var(--p1),.35)}
+@media (hover:none){
+.codeblock:hover{box-shadow:0 22px 44px -28px rgba(0,0,0,.7);transform:none;animation:none}
+.doc-section ul>li:hover{transform:none}
+.doc-section ul>li:hover::before{transform:none;box-shadow:0 0 8px rgba(var(--p2),.8)}
+h2:hover .num{transform:none;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box;color:inherit}
+}
+</style>
+<style id="tidy-top">
+@media (max-width:900px){
+  .top-in{gap:10px;padding:10px 14px}
+  .brand .pill{box-sizing:border-box;height:46px;padding:0 16px;gap:8px;font-size:13px;font-weight:700;line-height:1;box-shadow:0 0 0 1px rgba(var(--p1),.4);animation:none}
+  .brand .pill svg{width:20px;height:20px;flex:none}
+  .search input{height:46px;padding:0 14px 0 42px;font-size:13.5px;text-overflow:ellipsis}
+  .search input::placeholder{text-overflow:ellipsis}
+  .search .si{left:14px}
+  .mnav{padding:2px 14px 12px;scroll-padding-inline:14px;gap:8px}
+  .mnav a{padding:7px 14px}
+}
+</style>
+</head>
+<body>
+<div id="rxm-loader"></div>
+<template id="rxl-tpl"><style>
+:host{display:block;position:fixed;inset:0;z-index:2147483000;overflow:hidden;background:#000;color:#fff;color-scheme:dark;--bg:#000;--ink:#ebebeb;--ash:#6e6e6e;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans CJK SC","Noto Sans Symbols2",sans-serif;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:opacity .9s ease-in-out}:host(.gone){opacity:0;pointer-events:none}
+*{margin:0;padding:0;box-sizing:border-box}
+#stage{position:fixed;inset:0;opacity:0;transition:opacity .55s;transform-origin:50% 40%}
+#stage.out{opacity:0!important;transform:scale(1.25);transition:opacity .95s ease-in-out,transform .95s cubic-bezier(.7,0,.9,.4)}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,transparent 38%,#000 100%)}
+.br{position:absolute;width:0;height:0;border:0 solid var(--ink);transition:width .6s cubic-bezier(.2,.8,.2,1),height .6s cubic-bezier(.2,.8,.2,1);animation:bp 2.6s ease-in-out infinite}
+.br.on{width:30px;height:30px}
+.tl{top:calc(18px + env(safe-area-inset-top));left:calc(18px + env(safe-area-inset-left));border-top-width:2px;border-left-width:2px}
+.tr{top:calc(18px + env(safe-area-inset-top));right:calc(18px + env(safe-area-inset-right));border-top-width:2px;border-right-width:2px}
+.bl{bottom:calc(18px + env(safe-area-inset-bottom));left:calc(18px + env(safe-area-inset-left));border-bottom-width:2px;border-left-width:2px}
+.brr{bottom:calc(18px + env(safe-area-inset-bottom));right:calc(18px + env(safe-area-inset-right));border-bottom-width:2px;border-right-width:2px}
+@keyframes bp{50%{opacity:.45}}
+.hud{position:absolute;font:10px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.12em;color:#999;opacity:0;transition:opacity .9s}
+.hud.on{opacity:.5}
+#h1{top:calc(26px + env(safe-area-inset-top));left:calc(60px + env(safe-area-inset-left))}
+#h2{top:calc(26px + env(safe-area-inset-top));right:calc(60px + env(safe-area-inset-right))}
+#h3{bottom:calc(26px + env(safe-area-inset-bottom));left:calc(60px + env(safe-area-inset-left))}
+#h4{bottom:calc(26px + env(safe-area-inset-bottom));right:calc(60px + env(safe-area-inset-right))}
+#txt{position:absolute;left:0;right:0;text-align:center}
+#title{display:flex;justify-content:center;white-space:nowrap;font-weight:900;font-size:clamp(13px,4.3vw,26px);letter-spacing:.04em;line-height:1.3}
+.l{display:inline-block;white-space:pre;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .55s cubic-bezier(.2,1.7,.4,1)}
+.l.on{opacity:1;transform:none;animation:shim 2.6s ease-in-out infinite;animation-delay:calc(var(--i)*-.12s)}
+#title .l.sp,.l.sp{min-width:.6em}
+@keyframes shim{0%,100%{color:#8c8c8c;text-shadow:none}50%{color:#fff;text-shadow:0 0 14px #fff7}}
+.o .l{opacity:0!important;transform:translateY(-26px)!important;transition:opacity .5s calc(var(--d)*1s),transform .5s calc(var(--d)*1s) ease-in}
+#sub{margin-top:.9em;font-size:clamp(9px,2.6vw,11px);letter-spacing:.3em;color:#bebebe;opacity:0;transition:opacity .9s;white-space:nowrap}
+#sub.on{opacity:.85}
+#sub::before,#sub::after{content:"";display:inline-block;width:0;height:1px;vertical-align:middle;margin:0 .9em;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+#sub::before{background:linear-gradient(90deg,transparent,#fffb)}
+#sub::after{background:linear-gradient(90deg,#fffb,transparent)}
+#sub.on::before,#sub.on::after{width:min(13vw,80px)}
+#bar{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(8vh + env(safe-area-inset-bottom));width:min(84vw,460px)}
+.row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;margin-bottom:9px;color:#aaa;font-weight:500}
+.row b{color:#fff;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+#st.sw{animation:sw .4s ease-out}
+@keyframes sw{from{opacity:.15;transform:translateY(5px)}}
+.trk{position:relative;height:5px;border-radius:5px;background:#1c1c1c;box-shadow:0 0 0 1px #ffffff26}
+#fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:5px;background:linear-gradient(90deg,#6e6e6e,#ebebeb 70%,#fff);overflow:hidden}
+#fill::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(5% - 1px),#000a calc(5% - 1px) 5%)}
+#fill::before{content:"";position:absolute;top:0;bottom:0;width:30%;left:var(--sw,-40%);background:linear-gradient(90deg,transparent,#fffa,transparent)}
+#head{position:absolute;top:50%;left:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle,#ffffffcc,#fff0 65%);pointer-events:none}
+#flash{position:fixed;inset:0;background:#ebebeb;opacity:0;pointer-events:none}
+#flash.f{opacity:.4;transition:opacity .12s}
+#flash.g{opacity:0;transition:opacity .7s}
+@media(prefers-reduced-motion:reduce){.br.l.on,}
+</style>
+<div id="stage">
+  <canvas id="c"></canvas>
+  <div class="vig"></div>
+  <i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>
+  <span class="hud" id="h1">RXM // BOOT.SEQ</span><span class="hud" id="h2">T+0.00s</span>
+  <span class="hud" id="h3">YIN // YANG</span><span class="hud" id="h4">MONOCHROME</span>
+  <div id="txt"><div id="title"></div><div id="sub">陰 · R X M &nbsp;H U B · 陽</div></div>
+  <div id="bar">
+    <div class="row"><span id="st">Initializing core</span><b id="pc">0%</b></div>
+    <div class="trk"><div id="fill"></div><i id="head"></i></div>
+  </div>
+</div>
+<div id="flash"></div>
+
+</template>
+<script>
+(function(){
+var host=document.getElementById('rxm-loader'),tpl=document.getElementById('rxl-tpl');
+if(!host||!tpl)return;
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){host.remove();return}
+var htmlEl=document.documentElement,prevOv=htmlEl.style.overflow,over=false;
+htmlEl.style.overflow='hidden';
+var R=host.attachShadow({mode:'open'});R.appendChild(tpl.content.cloneNode(true));
+try{
+var done=false;
+function finish(){
+  if(done)return;done=true;run=false;host.classList.add('gone');
+  setTimeout(function(){removeEventListener('resize',resize);host.remove();tpl.remove();htmlEl.style.overflow=prevOv},950);
+}
+
+const $=id=>R.getElementById(id),cv=$('c'),x=cv.getContext('2d');
+const TEXT='亗 『 R X M H U B 』 🄾🄽 🅃🄾🄿 亗',TOTAL=+(3.5+Math.random()*4).toFixed(2),BS=1.0,PI=Math.PI,PI2=PI*2;
+const STATUS=[[0,'Initializing core'],[.14,'Loading modules'],[.34,'Fetching tech list'],[.55,'Balancing yin & yang'],[.74,'Applying Monochrome theme'],[.9,'Finalizing']];
+const FOG=[{s:1,sx:.38,sy:.31,ax:.2,ay:.14,ph:0,a:.11},{s:.8,sx:.27,sy:.44,ax:.26,ay:.18,ph:2.1,a:.08},{s:.65,sx:.52,sy:.36,ax:.3,ay:.12,ph:4.2,a:.06}];
+const NZ=(()=>{const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d'),d=g.createImageData(128,128);for(let i=0;i<d.data.length;i+=4){d.data[i]=d.data[i+1]=d.data[i+2]=255;d.data[i+3]=Math.random()*7|0}g.putImageData(d,0,0);return c})();let nzp=null;
+const rnd=(a,b)=>a+Math.random()*(b-a),cl=v=>Math.max(0,Math.min(1,v));
+const bk=v=>{v=cl(v);const c=1.70158;return 1+(c+1)*Math.pow(v-1,3)+c*Math.pow(v-1,2)};
+const q4=v=>1-Math.pow(1-cl(v),4);
+let W,H,D,E,cx,cy,stars,gal,parts,run=false,t0=0,lastT=0,st,ev,evi,ac;
+const stage=$('stage'),title=$('title'),txt=$('txt');
+const letters=[...TEXT].map((ch,i)=>{const s=document.createElement('span');s.className='l'+(ch===' '?' sp':'');s.textContent=ch;s.style.setProperty('--i',i);title.appendChild(s);return s});
+const mkp=init=>({x:rnd(0,W),y:init?rnd(0,H):H+rnd(10,80),v:rnd(22,75),a:rnd(2,12),f:rnd(.8,2.4),p:rnd(0,6.28),al:rnd(.25,.7),r:rnd(1.2,3)});
+function resize(){
+  D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+  cv.width=W*D;cv.height=H*D;x.setTransform(D,0,0,D,0,0);
+  E=Math.min(Math.min(W,H)*.36,230);cx=W/2;cy=H*(W<H?.37:.4);
+  stars=Array.from({length:90},(_,i)=>({x:rnd(0,W),y:rnd(0,H),r:rnd(.4,1.6),p:rnd(0,6.28),s:rnd(.6,2.4),z:i<55?.3:1}));
+  gal=Array.from({length:150},(_,i)=>({a:i%2,d:rnd(.62,1.9),o:rnd(-.28,.28),w:rnd(.6,2)}));
+  parts=Array.from({length:36},()=>mkp(true));
+  txt.style.top=(cy+E*.8+22)+'px';
+}
+addEventListener('resize',resize);
+
+function chime(p){
+  try{
+    ac=ac||new(window.AudioContext||window.webkitAudioContext)();
+    const n=ac.currentTime;
+    [146.8,220,293.7*p].forEach((f,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.type=i?'sine':'triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,n);g.gain.exponentialRampToValueAtTime(.12/(i+1),n+.03);g.gain.exponentialRampToValueAtTime(.0001,n+2.2);
+      o.connect(g).connect(ac.destination);o.start(n);o.stop(n+2.3);
+    });
+  }catch(e){}
+}
+const wave=(r0,r1,life,w,t)=>st.waves.push({r0,r1,life,w,t});
+
+function reset(){
+  st={px:0,py:0,tx:0,ty:0,mv:-9e3,boost:0,gA:0,kick:0,rot:0,idx:-1,exiting:false,exitAt:0,faded:false,waves:[],shoots:[],nextShoot:1.8,nextWave:2.3,nextGlitch:4.4,glitchUntil:0,li:0,ready:false,ex:0};
+  stage.classList.remove('out');stage.style.opacity=0;title.classList.remove('o');
+  letters.forEach(l=>l.classList.remove('on'));
+  R.querySelectorAll('.br,.hud,#sub').forEach(e=>e.classList.remove('on'));
+  $('st').textContent=STATUS[0][1];$('pc').textContent='0%';$('fill').style.width='0';$('head').style.left='0';
+  title.style.textShadow='none';
+  const on=(sel,t)=>[t,()=>R.querySelectorAll(sel).forEach(e=>e.classList.add('on'))];
+  ev=[[0.05,()=>stage.style.opacity=1],[.78,()=>wave(E*.1,E*1.7,1.2,4,st.t)],on('.br',1.2),on('.hud',1.4),on('#sub',2.5),[1.9,()=>st.ready=true]].sort((a,b)=>a[0]-b[0]);
+  evi=0;
+}
+function shock(p){
+  st.boost=Math.max(st.boost,p);wave(E*.3,E*(1+p),1.1,3,st.t);
+  if(p>.9)chime(p);
+}
+host.addEventListener('pointerdown',e=>{
+  if(!run)return;
+  st.tx=e.clientX/W-.5;st.ty=e.clientY/H-.5;st.mv=performance.now();shock(1);
+});
+host.addEventListener('pointermove',e=>{if(!st)return;st.tx=e.clientX/W-.5;st.ty=e.clientY/H-.5;st.mv=performance.now()});
+
+function ring(r,a0,len,w,col){x.strokeStyle=col;x.lineWidth=w;x.beginPath();x.arc(0,0,r,a0,a0+len);x.stroke()}
+function yy(r,rot,a,t){
+  x.save();x.rotate(rot);x.globalAlpha=a;const u=r/98;x.scale(u,u);
+  let g=x.createRadialGradient(-35,-45,0,0,0,140);g.addColorStop(0,'#fff');g.addColorStop(1,'#c8c8c8');
+  x.fillStyle=g;x.beginPath();x.arc(0,0,98,0,PI2);x.fill();
+  g=x.createRadialGradient(35,45,0,0,0,140);g.addColorStop(0,'#3c3c3c');g.addColorStop(1,'#000');
+  x.fillStyle=g;x.beginPath();x.moveTo(0,-98);x.arc(0,0,98,-PI/2,PI/2);x.arc(0,49,49,PI/2,PI*1.5);x.arc(0,-49,49,PI/2,-PI/2,true);x.closePath();x.fill();
+  const dp=14*(1+.4*(.5-.5*Math.cos(t*2.6)));
+  x.fillStyle='#000';x.beginPath();x.arc(0,-49,dp,0,PI2);x.fill();
+  x.fillStyle='#fff';x.beginPath();x.arc(0,49,dp,0,PI2);x.fill();
+  x.strokeStyle='#ffffffaa';x.lineWidth=2;x.beginPath();x.arc(0,0,98,0,PI2);x.stroke();
+  x.restore();
+}
+function frame(now){
+  if(!run)return;
+  const t=(now-t0)/1000,dt=Math.min(.05,(now-lastT)/1000||.016);lastT=now;st.t=t;
+  while(evi<ev.length&&t>=ev[evi][0])ev[evi++][1]();
+  const idle=now-st.mv>2500,tx=idle?Math.sin(t*.5)*.22:st.tx,ty=idle?Math.cos(t*.43)*.16:st.ty,k=Math.min(1,dt*3);
+  st.px+=(tx-st.px)*k;st.py+=(ty-st.py)*k;const px=st.px,py=st.py;
+  st.boost*=1-Math.min(1,dt*1.6);st.kick*=1-Math.min(1,dt*2.2);st.rot+=dt*(.45+st.kick);st.gA+=dt*.18*(1+st.boost*5);
+
+  x.globalCompositeOperation='source-over';x.fillStyle='#000';x.fillRect(0,0,W,H);
+  const M=Math.max(W,H);
+  for(const f of FOG){
+    const fx=W*(.5+f.ax*Math.sin(t*f.sx+f.ph)),fy=H*(.5+f.ay*Math.cos(t*f.sy+f.ph)),r=f.s*M*.55;
+    const g=x.createRadialGradient(fx,fy,0,fx,fy,r);g.addColorStop(0,`rgba(255,255,255,${f.a+.02*Math.sin(t*1.3+f.ph)})`);g.addColorStop(1,'rgba(255,255,255,0)');
+    x.fillStyle=g;x.fillRect(0,0,W,H);
+  }
+  if(!nzp)nzp=x.createPattern(NZ,'repeat');
+  x.save();x.globalCompositeOperation='lighter';x.translate((Math.random()*128)|0,(Math.random()*128)|0);x.fillStyle=nzp;x.fillRect(-128,-128,W+128,H+128);x.restore();
+  for(const s of stars){
+    x.fillStyle=`rgba(255,255,255,${.15+.6*Math.abs(Math.sin(t*s.s+s.p))})`;
+    x.beginPath();x.arc(s.x-px*60*s.z,s.y-py*45*s.z,s.r,0,PI2);x.fill();
+  }
+  if(t>st.nextShoot){st.nextShoot=t+rnd(2.2,4.8);const a=rnd(.4,.7);st.shoots.push({x:rnd(0,W*.7),y:rnd(0,H*.35),vx:Math.cos(a)*14,vy:Math.sin(a)*14,l:1})}
+  for(let i=st.shoots.length;i--;){
+    const s=st.shoots[i];s.x+=s.vx;s.y+=s.vy;s.l-=.02;
+    if(s.l<=0){st.shoots.splice(i,1);continue}
+    const g=x.createLinearGradient(s.x,s.y,s.x-s.vx*7,s.y-s.vy*7);g.addColorStop(0,`rgba(255,255,255,${s.l})`);g.addColorStop(1,'rgba(255,255,255,0)');
+    x.strokeStyle=g;x.lineWidth=1.6;x.beginPath();x.moveTo(s.x,s.y);x.lineTo(s.x-s.vx*7,s.y-s.vy*7);x.stroke();
+  }
+  // sinar pemindai + garis cahaya diagonal
+  const by=(((t*.2)%1.25)-.12)*H;
+  let g;x.fillStyle='rgba(255,255,255,.18)';x.fillRect(0,by-.7,W,1.4);
+  for(let i=0;i<4;i++){
+    const sx=(((t*(.05+i*.02)+i*.27)%1)*1.5-.25)*W;
+    x.save();x.translate(sx,H/2);x.rotate(.31);
+    g=x.createLinearGradient(0,-H,0,H);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(255,255,255,.08)');g.addColorStop(1,'rgba(255,255,255,0)');
+    x.fillStyle=g;x.fillRect(-1,-H,2,H*2);x.restore();
+  }
+  // partikel naik
+  x.globalCompositeOperation='lighter';
+  for(let i=0;i<parts.length;i++){
+    const p=parts[i];p.y-=p.v*dt;if(p.y<-20)parts[i]=mkp(false);
+    const vis=cl(Math.min((H-p.y)/(H*.1),(p.y+10)/(H*.3)));
+    x.fillStyle=`rgba(255,255,255,${p.al*vis*.7})`;x.beginPath();x.arc(p.x+Math.sin(t*p.f+p.ph)*p.a,p.y,p.r,0,PI2);x.fill();
+  }
+  // galaksi spiral
+  const ex=cx+px*10,ey=cy+py*8,gin=cl((t-.9)/1.6);
+  for(const p of gal){
+    const r=E*.72*p.d*(1+.03*Math.sin(t*1.4+p.o*20)),a=p.a*PI+p.d*1.7+p.o+st.gA;
+    const al=Math.min(.85,.45/p.d+st.boost*.25)*gin;
+    x.fillStyle=p.a?`rgba(170,170,170,${al})`:`rgba(255,255,255,${al})`;
+    x.beginPath();x.arc(cx+px*16+Math.cos(a)*r*1.3,cy+py*12+Math.sin(a)*r,p.w*(1+st.boost*.5),0,PI2);x.fill();
+  }
+  x.globalCompositeOperation='source-over';
+
+  // progres
+  const u=cl((t-BS)/(TOTAL-BS)),p=u*u*(3-2*u);
+  const idx=STATUS.reduce((a,s,i)=>p>=s[0]?i:a,0);
+  if(idx!==st.idx&&!st.exiting){
+    if(st.idx>=0){st.kick+=5;st.boost=1;wave(E*.5,E*1.6,.9,2,t);}
+    st.idx=idx;const el=$('st');el.textContent=STATUS[idx][1];el.classList.remove('sw');void el.offsetWidth;el.classList.add('sw');
+  }
+  if(!st.exiting){$('pc').textContent=Math.round(p*100)+'%'}
+  $('fill').style.width=p*100+'%';$('fill').style.setProperty('--sw',((t*.9)%1.6-.4)*100+'%');$('head').style.left=p*100+'%';$('head').style.opacity=.7+.3*Math.sin(t*11);
+  if(((t*30)|0)%3===0)$('h2').textContent='T+'+t.toFixed(2)+'s';
+
+  // lambang
+  const eS=bk((t-.78)/1)*(1+st.ex),pul=.5+.5*Math.sin(t*3.2);
+  x.save();x.translate(ex,ey);x.scale(eS,eS);
+  const gs=E*(1.15+.1*pul),gl=x.createRadialGradient(0,0,0,0,0,gs);
+  gl.addColorStop(0,`rgba(255,255,255,${.2+.2*pul+.2*p+st.boost*.1})`);gl.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle=gl;x.beginPath();x.arc(0,0,gs,0,PI2);x.fill();
+  x.lineCap='round';
+  for(let i=st.waves.length;i--;){
+    const w=st.waves[i],a=(t-w.t)/w.life;
+    if(a>=1){st.waves.splice(i,1);continue}
+    x.strokeStyle=`rgba(255,255,255,${(1-a)*.85})`;x.lineWidth=Math.max(.5,w.w*(1-a));
+    x.beginPath();x.arc(0,0,w.r0+(w.r1-w.r0)*q4(a),0,PI2);x.stroke();
+  }
+  // cincin kemajuan melingkar
+  let s=bk((t-1.05)/.7);
+  if(s>0){
+    x.save();x.scale(s,s);const pr=E*.42,ang=p*PI2;
+    x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=1.5;x.beginPath();x.arc(0,0,pr,0,PI2);x.stroke();
+    x.shadowColor='#fff';x.shadowBlur=12;ring(pr,-PI/2,Math.max(.001,ang),3.6,'#fff');x.shadowBlur=0;
+    const hx=Math.cos(ang-PI/2)*pr,hy=Math.sin(ang-PI/2)*pr,hg=x.createRadialGradient(hx,hy,0,hx,hy,14);
+    hg.addColorStop(0,'rgba(255,255,255,.95)');hg.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=hg;x.beginPath();x.arc(hx,hy,14,0,PI2);x.fill();
+    x.restore();
+  }
+  // cincin busur
+  s=bk((t-1.25)/.7);
+  if(s>0){
+    x.save();x.scale(s,s);const a1=t*1.1,r=E*.5;
+    ring(r,a1,1.5,7,'rgba(255,255,255,.14)');ring(r,a1,1.5,2.4,'#fff');ring(r,a1+PI,1.5,2.4,'#777');ring(r,a1+PI/2,.5,1.5,'#bbb');ring(r,a1+PI*1.5,.5,1.5,'#555');
+    x.restore();
+  }
+  s=bk((t-1.15)/.7);
+  if(s>0){x.save();x.scale(s,s);const a2=-t*1.6,r=E*.35;ring(r,a2,2,1.6,'#ebebeb');ring(r,a2+PI,1,1.6,'#6e6e6e');x.restore()}
+  // tick
+  s=bk((t-1.35)/.8);
+  if(s>0){
+    x.save();x.scale(s,s);x.rotate(t*.2);x.strokeStyle='#ebebeb';
+    for(let i=0;i<48;i++){const a=i*PI2/48,mj=i%6===0,r0=E*.58,l=mj?10:5;x.globalAlpha=mj?.9:.45;x.lineWidth=mj?1.6:1;x.beginPath();x.moveTo(Math.cos(a)*r0,Math.sin(a)*r0);x.lineTo(Math.cos(a)*(r0+l),Math.sin(a)*(r0+l));x.stroke()}
+    x.restore();
+  }
+  // cincin trigram
+  s=bk((t-1.45)/.8);
+  if(s>0){
+    x.save();x.scale(s,s);x.rotate(-t*.14);x.strokeStyle='#fff';x.lineWidth=2;x.lineCap='butt';const hw=E*.07;
+    for(let n=0;n<8;n++){
+      x.save();x.rotate(n*PI/4);x.translate(0,-E*.73);x.globalAlpha=.35+.5*(.5+.5*Math.sin(t*2.1-n*.7));
+      for(let l=0;l<3;l++){const yy0=(l-1)*5.5;x.beginPath();
+        if((n>>l)&1){x.moveTo(-hw,yy0);x.lineTo(hw,yy0)}else{x.moveTo(-hw,yy0);x.lineTo(-hw*.22,yy0);x.moveTo(hw*.22,yy0);x.lineTo(hw,yy0)}
+        x.stroke()}
+      x.restore();
+    }
+    x.restore();
+  }
+  x.lineCap='round';
+  // inti yin-yang
+  s=bk((t-.95)/.9);
+  if(s>0){x.save();x.scale(s*(st.ready&&!st.exiting?1+.03*pul:1),s*(st.ready&&!st.exiting?1+.03*pul:1));yy(E*.28,st.rot,1,t);x.restore()}
+  // titik orbit + ekor
+  for(let i=0;i<3;i++){
+    const sp=(1.1+i*.5)*(i===1?-1:1),ph=(i+1)*2.09;
+    for(let j=4;j>=0;j--){
+      const a=t*sp+ph-j*.13*(sp>0?1:-1),rr=E*.46,r=j?3.4-j*.5:3.4;
+      if(!j){const og=x.createRadialGradient(Math.cos(a)*rr,Math.sin(a)*rr,0,Math.cos(a)*rr,Math.sin(a)*rr,14);og.addColorStop(0,'rgba(255,255,255,.55)');og.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=og;x.beginPath();x.arc(Math.cos(a)*rr,Math.sin(a)*rr,14,0,PI2);x.fill()}
+      x.fillStyle=`rgba(255,255,255,${j?.5-j*.1:1})`;x.beginPath();x.arc(Math.cos(a)*rr,Math.sin(a)*rr,Math.max(.8,r),0,PI2);x.fill();
+    }
+  }
+  x.restore();
+  // garis cahaya pembuka
+  if(t<1.2){
+    const lw=q4((t-.12)/.65)*W*.72,la=t<.78?1:cl(1-(t-.78)/.3);
+    const lg=x.createLinearGradient(cx-lw/2,0,cx+lw/2,0);lg.addColorStop(0,'rgba(255,255,255,0)');lg.addColorStop(.5,`rgba(255,255,255,${la})`);lg.addColorStop(1,'rgba(255,255,255,0)');
+    x.fillStyle=lg;x.fillRect(cx-lw/2,cy-1,lw,2);
+  }
+  // judul huruf per huruf + glitch
+  if(!st.exiting){
+    while(st.li<letters.length&&t>=1.5+st.li*.05)letters[st.li++].classList.add('on');
+    if(st.li>=letters.length&&t>st.nextGlitch){st.glitchUntil=t+.16;st.nextGlitch=t+rnd(1.2,2.6)}
+    if(t<st.glitchUntil){const j=(Math.random()*4+3)|0;title.style.textShadow=`${-j}px 0 #ffffffaa,${j}px 0 #777`;title.style.transform=`translateX(${(Math.random()*4-2)|0}px)`}
+    else{title.style.textShadow='none';title.style.transform='none'}
+  }
+  // selesai
+  if(!st.exiting&&u>=1){
+    st.exiting=true;st.exitAt=t;$('pc').textContent='100%';$('st').textContent='Ready';
+    const f=$('flash');f.className='f';setTimeout(()=>{f.className='g'},120);
+    st.kick+=9;st.boost=1.6;st.ex=.2;wave(E*.6,E*5,1,6,t);setTimeout(()=>wave(E*.5,E*3.4,.9,3,st.t),120);chime(1.6);
+    letters.forEach((l,i)=>l.style.setProperty('--d',(Math.abs(i-(letters.length-1)/2)*.02).toFixed(3)));
+    title.classList.add('o');
+  }
+  if(st.exiting){
+    const e=t-st.exitAt;st.ex=Math.max(0,.2*(1-e*2));
+    if(!st.faded&&e>=.55){st.faded=true;stage.classList.add('out');host.classList.add('gone')}
+    if(e>=1.6){finish();return}
+  }
+  requestAnimationFrame(frame);
+}
+function start(){
+  resize();reset();letters.forEach(l=>{l.style.minWidth='';l.style.minWidth=l.offsetWidth+'px'});run=true;t0=performance.now();lastT=t0;st.t=0;
+  requestAnimationFrame(frame);
+}
+setTimeout(finish,16000);
+start();
+
+}catch(err){done=true;host.remove();htmlEl.style.overflow=prevOv}
+})();
+</script>
+<div class="bgfx" aria-hidden="true"><div class="grid"></div><div class="floor"></div><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grain"></div><div class="vig"></div></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><g id="yy-sym"><circle r="96" fill="#f5f5f9" stroke="#8d8d8d" stroke-width="3"/><path d="M0-96A96 96 0 0 1 0 96A48 48 0 0 1 0 0A48 48 0 0 0 0-96Z" fill="#0a0a0e"/><circle cy="-48" r="13" fill="#0a0a0e"/><circle cy="48" r="13" fill="#f5f5f9"/></g></defs></svg>
+<header class="top"><div class="top-in">
+  <div class="brand"><span class="pill"><svg viewBox="-100 -100 200 200" aria-hidden="true"><use href="#yy-sym"/></svg>RXM UI</span><span class="t">User Guide</span></div>
+  <div class="search"><svg class="si" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><input id="q" type="search" placeholder="Search the guide..." autocomplete="off" aria-label="Search the guide"><kbd class="sk" aria-hidden="true">/</kbd></div>
+</div><div class="mnav" id="mnav" aria-label="Sections"></div><div class="prog" id="prog"></div></header>
+<div class="wrap">
+  <nav class="side" id="toc"><a href="#1-what-is-rxm-ui">1. What is RXM UI?</a><a href="#2-quick-start">2. Quick start</a><a href="#3-creating-a-window">3. Creating a window</a><a href="#4-elements">4. Elements</a><a href="#5-notifications">5. Notifications</a><a href="#6-loading-screen-intro">6. Loading screen (intro)</a><a href="#7-key-system">7. Key system</a><a href="#8-colors-and-theme">8. Colors and theme</a><a href="#9-icons">9. Icons</a><a href="#10-fonts">10. Fonts</a><a href="#11-the-built-in-settings-tab">11. The built-in Settings tab</a><a href="#12-where-does-my-script-logic-go">12. Where does my script logic go?</a><a href="#13-api-cheat-sheet">13. API cheat sheet</a><a href="#14-troubleshooting">14. Troubleshooting</a></nav>
+  <main>
+    <div class="hero">
+      <div class="hero-t">
+<h1>RXM UI Library - User Guide</h1>
+<p>A Dynamic Island style UI with custom intros, a key system, 120+ icons, a yin-yang theme and 120+ fonts.</p>
+<div class="chips"><span>Dynamic Island</span><span>Key system</span><span>120+ icons</span><span>120+ fonts</span><span>Yin-Yang theme</span></div>
+
+      <div class="cta">
+        <a class="btn solid" href="#1-what-is-rxm-ui">Get started</a>
+        <button class="btn" id="copyQuick" type="button">Copy library script</button>
+      </div>
+      <div class="term" aria-hidden="true"><div class="tbar"><i></i><i></i><i></i><span>my_hub.lua</span></div><div class="tcode"><code id="termcode"></code><span class="caret"></span></div></div>
+      </div>
+      <div class="stage" id="stage" role="img" aria-label="Spinning yin-yang symbol"><div class="pulse"></div><div class="pulse p2"></div><div class="pulse p3"></div><div class="tilt" id="tilt"><div class="halo"></div><i class="orb"></i><i class="orb o2"></i><i class="orb o3"></i><div class="aura"></div><svg class="ring" id="ring" viewBox="-130 -130 260 260" aria-hidden="true"><circle r="99" fill="none" stroke="currentColor" stroke-width=".8" stroke-dasharray="1 5" opacity=".55"/><circle r="127" fill="none" stroke="currentColor" stroke-width=".6" opacity=".35"/></svg><svg class="yy" id="yy" viewBox="-100 -100 200 200" aria-hidden="true"><circle r="96" fill="#f5f5f9" stroke="#8d8d8d" stroke-width="3"/><path d="M0-96A96 96 0 0 1 0 96A48 48 0 0 1 0 0A48 48 0 0 0 0-96Z" fill="#0a0a0e"/><circle class="da" cy="-48" r="13" fill="#0a0a0e"/><circle class="db" cy="48" r="13" fill="#f5f5f9"/></svg><div class="sheen"></div></div></div>
+    </div>
+    <div id="sections"><section class="doc-section" data-id="1-what-is-rxm-ui"><h2 id="1-what-is-rxm-ui"><a class="anchor" href="#1-what-is-rxm-ui" aria-label="Link to this section">#</a>1. What is RXM UI?</h2>
+<p>RXM UI is a <strong>UI-only library</strong> for Roblox scripts. It gives you a polished interface and a loading screen. It does <strong>not</strong> contain any game features. You write the features (your &quot;engine&quot;), and the library shows them as toggles, sliders, buttons and so on.</p>
+<p>The design is inspired by the iPhone Dynamic Island:</p>
+<ol>
+<li><strong>Pill</strong>: a small capsule at the top of the screen. This is the UI when it is closed.</li>
+<li><strong>Notification</strong>: when something happens, the pill stretches into a small banner, then shrinks back.</li>
+<li><strong>Panel</strong>: tap the pill and it expands into the full window with tabs.</li>
+</ol>
+<p>Everything is animated with springs, glow, neon borders and other effects. Colors, intro, icons and fonts can all be customised.</p>
+<h3>The mental model</h3>
+<pre><code>Library -&gt; Window -&gt; Tabs -&gt; Elements -&gt; your Callback (your logic)
+</code></pre>
+<ul>
+<li><strong>Library</strong>: the thing you load. It holds themes, intros, icons and fonts.</li>
+<li><strong>Window</strong>: one UI (pill + panel). You can create more than one.</li>
+<li><strong>Tab</strong>: a page inside the window.</li>
+<li><strong>Element</strong>: a control on a tab (Toggle, Slider, Button...).</li>
+<li><strong>Callback</strong>: a function you provide. It runs when the user changes the element.</li>
+</ul>
+</section>
+<section class="doc-section" data-id="2-quick-start"><h2 id="2-quick-start"><a class="anchor" href="#2-quick-start" aria-label="Link to this section">#</a>2. Quick start</h2>
+<h3>Step 1: Get the loadstring</h3>
+<p>The official copy is hosted on GitHub. Use this loadstring:</p>
+<pre><code class="language-lua">loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/RXMBEST/RXM-UI/refs/heads/main/RXM_UI_Library.lua&quot;))()
+</code></pre>
+<p>You can also upload your own copy of <code>RXM_UI_Library.lua</code> to GitHub (or a Gist or Pastebin) and put its <strong>raw</strong> link inside the loadstring instead.</p>
+<h3>Step 2: Write your script</h3>
+<pre><code class="language-lua">local Library = loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/RXMBEST/RXM-UI/refs/heads/main/RXM_UI_Library.lua&quot;))()
+
+local Window = Library:CreateWindow({ Name = &quot;My Hub&quot; })
+local Main   = Window:AddTab(&quot;Main&quot;)
+
+Main:Section(&quot;Features&quot;)
+
+Main:Toggle({
+    Name = &quot;Auto Farm&quot;,
+    Default = false,
+    Callback = function(on)
+        print(&quot;Auto Farm is&quot;, on)
+    end,
+})
+
+Main:Slider({
+    Name = &quot;Speed&quot;, Min = 0, Max = 100, Default = 25, Suffix = &quot;%&quot;,
+    Callback = function(value) print(value) end,
+})
+
+Main:Button({
+    Name = &quot;Say hello&quot;,
+    Callback = function()
+        Window:Notify({ Title = &quot;Hello&quot;, Content = &quot;It works!&quot;, Type = &quot;success&quot; })
+    end,
+})
+
+Window:CreateSettingsTab()   -- optional built-in Settings tab
+</code></pre>
+<h3>Step 3: Use it in game</h3>
+<ul>
+<li>Wait for the loading screen to finish. A small pill appears at the top of the screen.</li>
+<li><strong>Tap or click the pill</strong> to open the panel.</li>
+<li><strong>Drag the header</strong> to move the panel.</li>
+<li><strong>Tap anywhere outside the panel</strong> to close it back to the pill.</li>
+<li>To remove the UI completely, call <code>Window:Destroy()</code>, or show the <strong>Destroy UI</strong> button in Settings with <code>DestroyUI = false</code> and press it (tap twice to confirm).</li>
+<li><strong>RightControl</strong> hides or shows the whole UI (change it with <code>ToggleKey</code>).</li>
+</ul>
+</section>
+<section class="doc-section" data-id="3-creating-a-window"><h2 id="3-creating-a-window"><a class="anchor" href="#3-creating-a-window" aria-label="Link to this section">#</a>3. Creating a window</h2>
+<pre><code class="language-lua">local Window = Library:CreateWindow({
+    Name = &quot;RXM HUB&quot;,
+    Icon = &quot;shield&quot;,
+    Intro = true,
+    ToggleKey = Enum.KeyCode.RightControl,
+})
+</code></pre>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Name</code></td>
+<td>string</td>
+<td><code>&quot;RXM HUB&quot;</code></td>
+<td>Title shown in the pill and header.</td>
+</tr>
+<tr>
+<td><code>Icon</code></td>
+<td>string</td>
+<td>none</td>
+<td>Icon shown instead of the dot (see Icons).</td>
+</tr>
+<tr>
+<td><code>Intro</code></td>
+<td>boolean, string or table</td>
+<td>follows <code>Library:SetIntroEnabled</code> (true)</td>
+<td><code>true</code> plays the loading screen, <code>false</code> skips it, a string picks a named intro, a table is a one-off intro config.</td>
+</tr>
+<tr>
+<td><code>ToggleKey</code></td>
+<td>KeyCode</td>
+<td><code>RightControl</code></td>
+<td>Key that hides or shows the UI.</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td>Vector2</td>
+<td><code>(450, 360)</code></td>
+<td>Panel size. On phones it is fitted to the screen automatically.</td>
+</tr>
+<tr>
+<td><code>Scale</code></td>
+<td>number</td>
+<td><code>0.9</code></td>
+<td>Overall UI scale.</td>
+</tr>
+<tr>
+<td><code>Transparency</code></td>
+<td>number</td>
+<td><code>0.2</code></td>
+<td>How see-through the window is: <code>0</code> is solid, <code>0.9</code> is very transparent (glass look).</td>
+</tr>
+<tr>
+<td><code>IslandWidth</code></td>
+<td>number</td>
+<td><code>142</code></td>
+<td>Length (width in pixels) of the closed Dynamic Island pill, from 90 to 420.</td>
+</tr>
+<tr>
+<td><code>Accent</code></td>
+<td>Color3</td>
+<td>monochrome</td>
+<td>UI color (same as <code>Library:SetAccent</code>).</td>
+</tr>
+<tr>
+<td><code>Preset</code></td>
+<td>string</td>
+<td>none</td>
+<td>Color preset name (see Colors and theme).</td>
+</tr>
+<tr>
+<td><code>Font</code></td>
+<td>string or number</td>
+<td><code>&quot;Silkscreen&quot;</code></td>
+<td>Font name or Creator Store asset id.</td>
+</tr>
+<tr>
+<td><code>AutoOpen</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Open the panel right after the intro.</td>
+</tr>
+<tr>
+<td><code>Welcome</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>Set <code>false</code> to hide the &quot;loaded&quot; notification.</td>
+</tr>
+<tr>
+<td><code>Effects</code></td>
+<td>table</td>
+<td>all true</td>
+<td>Turn effects on or off: <code>Border</code>, <code>Glow</code>, <code>Neon</code>, <code>Shimmer</code>, <code>Embers</code>, <code>Aurora</code>, <code>Sounds</code>, <code>NotifySounds</code>, <code>SliderSounds</code>, <code>SwitchSounds</code>, <code>YinYang</code>. <code>Sounds</code> is the open/close and click sound; the other three are the notification, slider and switch sounds.</td>
+</tr>
+<tr>
+<td><code>IconSpin</code></td>
+<td>boolean</td>
+<td>auto</td>
+<td>Spin the window icon. By default only the <code>yinyang</code> icon spins.</td>
+</tr>
+<tr>
+<td><code>BorderSpeed</code></td>
+<td>number</td>
+<td>70</td>
+<td>Speed of the rotating neon border.</td>
+</tr>
+<tr>
+<td><code>ConfigFile</code></td>
+<td>string</td>
+<td><code>&quot;RXM_UI_Config.json&quot;</code></td>
+<td>File used by Save Config and Load Config.</td>
+</tr>
+<tr>
+<td><code>AutoLoad</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Load the config file automatically at start.</td>
+</tr>
+<tr>
+<td><code>KeySystem</code></td>
+<td>boolean</td>
+<td>none</td>
+<td><code>true</code> shows the key panel before the intro and the window, <code>false</code> skips it. If the player closes the panel, <code>CreateWindow</code> returns <code>nil</code>. See section 7.</td>
+</tr>
+<tr>
+<td><code>KeySettings</code></td>
+<td>table</td>
+<td>none</td>
+<td>Key panel options like <code>Title</code>, <code>Subtitle</code>, <code>Note</code>, <code>FileName</code>, <code>SaveKey</code>, <code>GrabKeyFromSite</code> and <code>Key</code>. Only used when <code>KeySystem = true</code>.</td>
+</tr>
+<tr>
+<td><code>Key</code></td>
+<td>boolean or table</td>
+<td>none</td>
+<td>Old style. <code>true</code> or <code>false</code> works like <code>KeySystem</code>, a table works like <code>KeySettings</code>.</td>
+</tr>
+</tbody></table></div>
+<h3>Window functions</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Window:AddTab(name, icon)</code></td>
+<td>Adds a tab and returns it.</td>
+</tr>
+<tr>
+<td><code>Window:CreateSettingsTab(name, hide)</code></td>
+<td>Adds the built-in Settings tab. <code>hide</code> is optional: a table where <code>true</code> hides a part and <code>false</code> shows it (see section 11).</td>
+</tr>
+<tr>
+<td><code>Window:Notify({...})</code></td>
+<td>Shows a notification (see section 5).</td>
+</tr>
+<tr>
+<td><code>Window:Open()</code>, <code>Close()</code>, <code>Toggle()</code></td>
+<td>Expand to panel, collapse to pill, or switch.</td>
+</tr>
+<tr>
+<td><code>Window:SetVisible(bool)</code></td>
+<td>Show or hide the whole UI.</td>
+</tr>
+<tr>
+<td><code>Window:SetIcon(name)</code></td>
+<td>Change the window icon (<code>nil</code> removes it).</td>
+</tr>
+<tr>
+<td><code>Window:SetTitle(text)</code></td>
+<td>Change the title.</td>
+</tr>
+<tr>
+<td><code>Window:SetScale(number)</code></td>
+<td>Change the UI scale (0.6 to 1.4).</td>
+</tr>
+<tr>
+<td><code>Window:SetIslandWidth(number)</code></td>
+<td>Change the length of the closed pill (90 to 420). It animates smoothly.</td>
+</tr>
+<tr>
+<td><code>Window:SetToggleKey(key)</code></td>
+<td>Change the hide/show key.</td>
+</tr>
+<tr>
+<td><code>Window:SetEffect(name, bool)</code></td>
+<td>Turn one effect on or off.</td>
+</tr>
+<tr>
+<td><code>Window:SelectTab(tab, name or index)</code></td>
+<td>Switch tab from code.</td>
+</tr>
+<tr>
+<td><code>Window:Destroy()</code></td>
+<td>Remove this window.</td>
+</tr>
+</tbody></table></div>
+</section>
+<section class="doc-section" data-id="4-elements"><h2 id="4-elements"><a class="anchor" href="#4-elements" aria-label="Link to this section">#</a>4. Elements</h2>
+<p>Every element is created from a tab: <code>Tab:Element({ ... })</code>. All of them accept <code>Name</code>, <code>Icon</code> and <code>Callback</code>. Most return an object with <code>Get()</code> and <code>Set(value, silent)</code>. Pass <code>silent = true</code> to change a value without running the callback.</p>
+<p>If you add <code>Flag = &quot;name&quot;</code>, the latest value is also stored in <code>Library.Flags.name</code>.</p>
+<h3>Section, Label and Paragraph</h3>
+<pre><code class="language-lua">Main:Section(&quot;Combat&quot;)              -- small heading
+Main:Section(&quot;Combat&quot;, &quot;sword&quot;)     -- heading with an icon
+Main:Label(&quot;Some information&quot;)      -- muted text line (returns :Set(text))
+Main:Paragraph({ Title = &quot;About&quot;, Content = &quot;Long text that wraps automatically.&quot; })
+</code></pre>
+<h3>Button</h3>
+<pre><code class="language-lua">Main:Button({
+    Name = &quot;Teleport&quot;,
+    Icon = &quot;map-pin&quot;,
+    Solid = true,                    -- optional: filled with the accent color
+    Callback = function() print(&quot;clicked&quot;) end,
+})
+</code></pre>
+<h3>Toggle</h3>
+<pre><code class="language-lua">local t = Main:Toggle({ Name = &quot;ESP&quot;, Default = false, Callback = function(on) print(on) end })
+t:Set(true)      -- turn on (runs the callback)
+t:Get()          -- true or false
+t:Toggle()       -- flip it
+</code></pre>
+<h3>Slider</h3>
+<pre><code class="language-lua">Main:Slider({
+    Name = &quot;Walk Speed&quot;,
+    Min = 16, Max = 200, Default = 16,
+    Step = 1,              -- rounding step (decimals allowed, e.g. 0.5)
+    Suffix = &quot; studs&quot;,     -- text after the number
+    Callback = function(value) print(value) end,
+})
+</code></pre>
+<p>Users can drag the bar or tap the number box and type a value.</p>
+<h3>Dropdown</h3>
+<pre><code class="language-lua">local d = Main:Dropdown({
+    Name = &quot;Mode&quot;, Options = { &quot;Easy&quot;, &quot;Normal&quot;, &quot;Hard&quot; }, Default = &quot;Normal&quot;,
+    Callback = function(choice) print(choice) end,
+})
+
+Main:Dropdown({                      -- multi select
+    Name = &quot;Targets&quot;, Options = { &quot;A&quot;, &quot;B&quot;, &quot;C&quot; }, Multi = true, Default = { &quot;A&quot; },
+    Callback = function(list) print(table.concat(list, &quot;, &quot;)) end,
+})
+
+d:Refresh({ &quot;New 1&quot;, &quot;New 2&quot; })     -- replace the options later
+</code></pre>
+<h3>Input</h3>
+<pre><code class="language-lua">Main:Input({
+    Name = &quot;Player name&quot;, Placeholder = &quot;type here&quot;,
+    Numeric = false,       -- true = digits only
+    Live = false,          -- true = callback on every keystroke
+    Callback = function(text) print(text) end,
+})
+</code></pre>
+<h3>Keybind</h3>
+<pre><code class="language-lua">Main:Keybind({
+    Name = &quot;Fly key&quot;, Default = Enum.KeyCode.F,
+    Callback = function() print(&quot;key pressed&quot;) end,   -- runs when the key is pressed
+    Changed  = function(newKey) print(newKey) end,    -- runs when the user rebinds
+})
+</code></pre>
+<p>The user taps the key box and presses a new key. Esc cancels and Backspace clears the bind.</p>
+<h3>ColorPicker</h3>
+<pre><code class="language-lua">Main:ColorPicker({
+    Name = &quot;ESP color&quot;, Default = Color3.fromRGB(255, 80, 80),
+    Callback = function(color) print(color) end,
+})
+</code></pre>
+<h3>Foldout</h3>
+<p>A collapsible group. Build its content inside <code>Build</code>:</p>
+<pre><code class="language-lua">Main:Foldout({
+    Name = &quot;Advanced&quot;, Open = false,
+    Build = function(tab)
+        tab:Toggle({ Name = &quot;Option 1&quot; })
+        tab:Slider({ Name = &quot;Option 2&quot;, Min = 1, Max = 10, Default = 5 })
+    end,
+})
+</code></pre>
+<h3>IconPicker and FontPicker</h3>
+<p>Cards that open a searchable list so the user can pick an icon or a font:</p>
+<pre><code class="language-lua">Main:IconPicker({ Name = &quot;Pick icon&quot;, Callback = function(iconName) print(iconName) end })
+Main:FontPicker({ Name = &quot;Pick font&quot;, Callback = function(fontName) Library:SetFont(fontName) end })
+</code></pre>
+</section>
+<section class="doc-section" data-id="5-notifications"><h2 id="5-notifications"><a class="anchor" href="#5-notifications" aria-label="Link to this section">#</a>5. Notifications</h2>
+<pre><code class="language-lua">Window:Notify({
+    Title = &quot;Saved&quot;,
+    Content = &quot;Your settings were saved.&quot;,
+    Type = &quot;success&quot;,     -- &quot;info&quot; (default), &quot;success&quot;, &quot;warn&quot; or &quot;error&quot;
+    Duration = 3.5,       -- seconds
+    Icon = &quot;star&quot;,        -- optional custom icon
+})
+</code></pre>
+<ul>
+<li>When the UI is closed, the notification appears inside the pill (Dynamic Island style).</li>
+<li>When the panel is open, it appears as a toast in the corner. Tap a toast to dismiss it.</li>
+<li><code>Library:Notify({...})</code> sends the notification to the most recent window.</li>
+<li>If one of your callbacks throws an error, the library shows it as a red notification instead of crashing the UI.</li>
+</ul>
+</section>
+<section class="doc-section" data-id="6-loading-screen-intro"><h2 id="6-loading-screen-intro"><a class="anchor" href="#6-loading-screen-intro" aria-label="Link to this section">#</a>6. Loading screen (intro)</h2>
+<h3>The on/off switch</h3>
+<pre><code class="language-lua">local LOADING_SCREEN = true      -- true = show the intro, false = skip it
+
+local Window = Library:CreateWindow({ Name = &quot;My Hub&quot;, Intro = LOADING_SCREEN })
+</code></pre>
+<p>You can also use <code>Library:SetIntroEnabled(false)</code> before <code>CreateWindow</code>. If <code>Intro</code> is set in <code>CreateWindow</code>, it wins over the global switch. Users can skip a running intro by tapping or clicking the screen (there is no on-screen text for it). Set <code>Skippable = false</code> in the intro to disable skipping.</p>
+<h3>Creating your own intro</h3>
+<pre><code class="language-lua">Library:AddIntro(&quot;MyIntro&quot;, {
+    Style    = &quot;Emblem&quot;,                       -- Emblem, Minimal, Cinematic or your own style
+    Text     = &quot;MY HUB&quot;,
+    Subtitle = &quot;WELCOME BACK&quot;,
+    Image    = &quot;rbxassetid://17297011003&quot;,     -- id, rbxassetid, https link, or a file in your workspace
+    Sound    = &quot;rbxassetid://86045706626808&quot;,
+    Duration = 5,
+    Colors   = { Primary = Color3.fromRGB(255, 60, 80), Secondary = Color3.fromRGB(120, 0, 20) },
+})
+Library:SetIntro(&quot;MyIntro&quot;)                    -- make it the active intro
+</code></pre>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Style</code></td>
+<td><code>&quot;Emblem&quot;</code></td>
+<td>Look of the intro: <code>Emblem</code>, <code>Minimal</code>, <code>Cinematic</code>, <code>YinYang</code>, or a function for a custom style.</td>
+</tr>
+<tr>
+<td><code>Text</code>, <code>Subtitle</code></td>
+<td>RXM HUB, WELCOME</td>
+<td>Title (typed out letter by letter) and small text under it.</td>
+</tr>
+<tr>
+<td><code>Image</code></td>
+<td>none</td>
+<td>Picture in the center. Works with decal ids too.</td>
+</tr>
+<tr>
+<td><code>Icon</code></td>
+<td>none</td>
+<td>An icon (for example <code>&quot;crown&quot;</code>) instead of the image or first letter.</td>
+</tr>
+<tr>
+<td><code>Letter</code></td>
+<td>first letter of <code>Text</code></td>
+<td>Letter shown when there is no image or icon.</td>
+</tr>
+<tr>
+<td><code>ImageSpin</code></td>
+<td>true</td>
+<td>Rotate the image.</td>
+</tr>
+<tr>
+<td><code>Sound</code>, <code>Volume</code></td>
+<td>none, 1.5</td>
+<td>Sound played during the intro.</td>
+</tr>
+<tr>
+<td><code>Duration</code></td>
+<td>5</td>
+<td>Seconds until the progress bar reaches 100%.</td>
+</tr>
+<tr>
+<td><code>Skippable</code></td>
+<td>true</td>
+<td>Tap to skip.</td>
+</tr>
+<tr>
+<td><code>TypeSpeed</code></td>
+<td>0.055</td>
+<td>Seconds per typed letter.</td>
+</tr>
+<tr>
+<td><code>Particles</code>, <code>Shockwaves</code>, <code>Glitch</code></td>
+<td>true</td>
+<td>Effects of the Emblem style.</td>
+</tr>
+<tr>
+<td><code>Statuses</code></td>
+<td>built-in list</td>
+<td>Status texts, for example <code>{ {0, &quot;Loading&quot;}, {0.5, &quot;Almost&quot;}, {0.9, &quot;Done&quot;} }</code> (progress from 0 to 1, then text).</td>
+</tr>
+<tr>
+<td><code>Colors</code></td>
+<td>follows UI color</td>
+<td><code>Primary</code>, <code>Secondary</code>, <code>Pale</code>, <code>Background</code>, <code>Text</code>. The YinYang style also reads <code>Yin</code> (dark half) and <code>Yang</code> (light half).</td>
+</tr>
+<tr>
+<td><code>Font</code></td>
+<td>follows UI font</td>
+<td>Font used only in the intro.</td>
+</tr>
+<tr>
+<td><code>Base</code></td>
+<td>none</td>
+<td>Name of another intro to inherit settings from.</td>
+</tr>
+</tbody></table></div>
+<h3>Built-in styles</h3>
+<ul>
+<li><strong>Emblem</strong>: fog, light beam, particles, rotating rings, glitch title and progress bar.</li>
+<li><strong>Minimal</strong>: clean logo ring, typed title, thin progress bar.</li>
+<li><strong>Cinematic</strong>: letterbox bars, zooming title with a light sweep, floating dust.</li>
+<li><strong>YinYang</strong>: a big spinning yin-yang with a rotating tick ring, orbiting light and dark orbs, swirling particles, black and white ripples, a typed title and a progress bar.</li>
+</ul>
+<h3>Quick setters</h3>
+<pre><code class="language-lua">Library:SetIntroText(&quot;MY HUB&quot;, &quot;WELCOME&quot;)
+Library:SetIntroImage(&quot;rbxassetid://123456&quot;)
+Library:SetIntroSound(&quot;rbxassetid://987654&quot;, 2)
+Library:SetIntroStyle(&quot;Cinematic&quot;)
+Library:SetIntroDuration(4)
+Library:SetIntroColor(Color3.fromRGB(80, 170, 255))   -- Library:SetIntroColor(nil) = follow UI color again
+Library:PlayIntro()                                    -- play it right now (preview)
+</code></pre>
+<h3>Writing a completely custom style</h3>
+<pre><code class="language-lua">Library:AddIntroStyle(&quot;Flash&quot;, function(ctx)
+    local label = ctx.Make(&quot;TextLabel&quot;, {
+        Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1,
+        Text = ctx.Config.Text, TextScaled = true, Font = Enum.Font.GothamBold,
+        TextColor3 = ctx.Colors.Primary,
+    }, ctx.Stage)
+
+    return {
+        -- t = seconds elapsed, dt = frame time, u = progress 0..1, p = smoothed progress
+        Step = function(t, dt, u, p)
+            label.TextTransparency = 1 - p
+        end,
+        OnComplete = function() end,   -- optional: runs when progress reaches 100%
+    }
+end)
+
+Library:AddIntro(&quot;FlashIntro&quot;, { Style = &quot;Flash&quot;, Text = &quot;HELLO&quot;, Duration = 3 })
+</code></pre>
+<p>The <code>ctx</code> table contains: <code>Stage</code> (the full-screen canvas), <code>Config</code>, <code>Colors</code>, <code>Viewport</code>, <code>Compact</code> (true on phones), <code>Make(class, props, parent)</code>, <code>Tween(...)</code>, <code>OnImage(fn)</code>, <code>StatusAt(progress)</code> and <code>Icon(parent, size, color)</code>.</p>
+</section>
+<section class="doc-section" data-id="7-key-system"><h2 id="7-key-system"><a class="anchor" href="#7-key-system" aria-label="Link to this section">#</a>7. Key system</h2>
+<p>The key system asks the player for a key <strong>before</strong> your hub opens. A small panel appears in the same colors and font as the rest of the UI. A correct key lets the script continue. If the player closes the panel, <code>CreateWindow</code> returns <code>nil</code> and nothing else loads.</p>
+<p>It works like the key system in Rayfield: turn it on with <code>KeySystem = true</code> (or off with <code>false</code>) and put the rest in <code>KeySettings</code>.</p>
+<p>The order is always: <strong>key panel</strong>, then the <strong>loading screen</strong>, then the <strong>window</strong>.</p>
+<h3>Quick start</h3>
+<pre><code class="language-lua">local Window = Library:CreateWindow({
+    Name = &quot;My Hub&quot;,
+    KeySystem = true,                       -- true = ask for a key, false = no key panel
+    KeySettings = {
+        Title = &quot;My Hub&quot;,
+        Subtitle = &quot;Key System&quot;,
+        Note = &quot;Join our Discord to get the key&quot;,
+        FileName = &quot;MyHubKey&quot;,              -- file that remembers the key
+        SaveKey = true,                     -- true = remember the key, false = ask every time
+        GrabKeyFromSite = false,            -- true = Key[1] is a link to a key list
+        Key = { &quot;RXM-1234-ABCD&quot;, &quot;RXM-VIP-9999&quot; },   -- accepted keys
+        KeyLink = &quot;https://example.com/get-key&quot;,     -- adds a Get Key button
+        Discord = &quot;https://discord.gg/yourinvite&quot;,   -- adds a Discord button
+    },
+})
+if not Window then return end    -- the player closed the key panel
+
+-- everything below only runs after a valid key
+local Tab = Window:AddTab(&quot;Main&quot;, &quot;home&quot;)
+</code></pre>
+<p>Set <code>KeySystem = false</code> and the key panel is skipped, so your hub opens right away. <code>KeyLink</code> and <code>Discord</code> are RXM extras: they copy the link when tapped, and both buttons are optional.</p>
+<p><strong>Good to know:</strong> <code>KeySettings</code> is only used when <code>KeySystem = true</code>. If you write <code>KeySettings</code> but forget <code>KeySystem</code>, no key panel is shown.</p>
+<h3>The true / false switches</h3>
+<p>Every on/off choice is a plain <code>true</code> or <code>false</code>.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>true</th>
+<th>false</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>KeySystem</code></td>
+<td>Ask for a key before the hub opens.</td>
+<td>No key panel, the hub opens at once.</td>
+</tr>
+<tr>
+<td><code>SaveKey</code></td>
+<td>Remember the key in a file, so the player does not type it next time.</td>
+<td>Never save. The player types the key every time.</td>
+</tr>
+<tr>
+<td><code>GrabKeyFromSite</code></td>
+<td>The first item in <code>Key</code> is a link. The keys are downloaded from it.</td>
+<td><code>Key</code> is a list of keys written in the script.</td>
+</tr>
+<tr>
+<td><code>[&quot;KEY&quot;] = true / false</code></td>
+<td>The key works.</td>
+<td>The key is disabled (shows <em>This key has been disabled</em>).</td>
+</tr>
+<tr>
+<td><code>AutoLogin</code></td>
+<td>Skip the panel when the saved key is still valid.</td>
+<td>Always show the panel.</td>
+</tr>
+<tr>
+<td><code>CaseSensitive</code></td>
+<td><code>ABC</code> and <code>abc</code> are different keys.</td>
+<td><code>ABC</code> and <code>abc</code> are the same key.</td>
+</tr>
+<tr>
+<td><code>Closable</code></td>
+<td>Show the close (X) button.</td>
+<td>No close button.</td>
+</tr>
+<tr>
+<td><code>KickOnLock</code></td>
+<td>Kick the player after too many wrong keys.</td>
+<td>Lock the panel for a while instead.</td>
+</tr>
+</tbody></table></div>
+<h3>Old style (still works)</h3>
+<p>Scripts that were written before this update keep working. <code>Key = { ... }</code> takes the same options as <code>KeySettings</code>, and <code>Key = true</code> or <code>Key = false</code> acts like <code>KeySystem = true</code> or <code>false</code>.</p>
+<pre><code class="language-lua">local Window = Library:CreateWindow({
+    Name = &quot;My Hub&quot;,
+    Key = {
+        Keys    = { &quot;RXM-1234-ABCD&quot;, &quot;RXM-VIP-9999&quot; },
+        KeyLink = &quot;https://example.com/get-key&quot;,
+    },
+})
+if not Window then return end
+</code></pre>
+<h3>Using it on its own</h3>
+<p>You do not need a window to use the key panel. <code>Library:KeySystem</code> waits until the player enters a valid key or closes the panel, then returns two values. It takes the same options as <code>KeySettings</code>.</p>
+<pre><code class="language-lua">local ok, info = Library:KeySystem({
+    Title = &quot;My Hub&quot;,
+    Keys  = { &quot;RXM-1234-ABCD&quot; },
+})
+if not ok then return end          -- closed without a valid key
+print(&quot;Welcome!&quot;, info.Key)
+</code></pre>
+<h3>Set it once</h3>
+<p>If you want to keep the key settings in one place, store them with <code>Library:SetKeyConfig</code> and then pass <code>KeySystem = true</code> to <code>CreateWindow</code>. Anything you write in <code>KeySettings</code> still wins.</p>
+<pre><code class="language-lua">Library:SetKeyConfig({
+    Key     = { &quot;RXM-1234-ABCD&quot; },
+    KeyLink = &quot;https://example.com/get-key&quot;,
+})
+
+local Window = Library:CreateWindow({ Name = &quot;My Hub&quot;, KeySystem = true })
+</code></pre>
+<h3>Options</h3>
+<p>Put these inside <code>KeySettings</code>. They are the same for <code>Key = { ... }</code> and <code>Library:KeySystem({ ... })</code>.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Keys</code></td>
+<td>table</td>
+<td>none</td>
+<td>List of accepted keys. Each item is a string, a table, or <code>[&quot;KEY&quot;] = true / false</code> (false = disabled). A table looks like <code>{ Key, Expire, HWID, Tier, Note }</code>.</td>
+</tr>
+<tr>
+<td><code>Key</code></td>
+<td>string or table</td>
+<td>none</td>
+<td>One accepted key, or a list of keys like Rayfield: <code>Key = { &quot;KEY-1&quot;, &quot;KEY-2&quot; }</code>. With <code>GrabKeyFromSite = true</code> the first item is a link instead.</td>
+</tr>
+<tr>
+<td><code>GrabKeyFromSite</code></td>
+<td>boolean</td>
+<td>false</td>
+<td><code>true</code>: <code>Key[1]</code> is a link to a key list (same as <code>Url</code>). <code>false</code>: <code>Key</code> holds the keys themselves.</td>
+</tr>
+<tr>
+<td><code>Url</code></td>
+<td>string</td>
+<td>none</td>
+<td>Link to a key list on a server (plain text or JSON). Loaded when the player checks a key. Same as <code>GrabKeyFromSite</code>.</td>
+</tr>
+<tr>
+<td><code>Validate</code></td>
+<td>function</td>
+<td>none</td>
+<td>Your own check: <code>function(key) return ok, message, info end</code>. When set, it replaces <code>Keys</code> and <code>Url</code>. <code>Check</code> also works as a name.</td>
+</tr>
+<tr>
+<td><code>KeyLink</code></td>
+<td>string</td>
+<td>none</td>
+<td>Adds a Get Key button that copies this link.</td>
+</tr>
+<tr>
+<td><code>Discord</code></td>
+<td>string</td>
+<td>none</td>
+<td>Adds a Discord button that copies this link.</td>
+</tr>
+<tr>
+<td><code>Title</code></td>
+<td>string</td>
+<td>window name</td>
+<td>Title of the panel.</td>
+</tr>
+<tr>
+<td><code>Subtitle</code></td>
+<td>string</td>
+<td><code>Enter your key to continue</code></td>
+<td>Text under the title.</td>
+</tr>
+<tr>
+<td><code>Note</code></td>
+<td>string</td>
+<td>none</td>
+<td>Small text under the subtitle, for example how to get a key. The panel grows to fit it.</td>
+</tr>
+<tr>
+<td><code>Placeholder</code></td>
+<td>string</td>
+<td><code>Paste your key here</code></td>
+<td>Hint shown in the empty key box.</td>
+</tr>
+<tr>
+<td><code>Footer</code></td>
+<td>string</td>
+<td>RXM UI version</td>
+<td>Small text at the bottom of the panel.</td>
+</tr>
+<tr>
+<td><code>Icon</code></td>
+<td>string</td>
+<td><code>key</code></td>
+<td>Icon in the round badge (see Icons).</td>
+</tr>
+<tr>
+<td><code>SaveKey</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>Remember the key in a file so the player does not type it every time. <code>Save</code> works as the same name.</td>
+</tr>
+<tr>
+<td><code>FileName</code></td>
+<td>string</td>
+<td><code>RXM_Key.txt</code></td>
+<td>File used to remember the key. If you write no extension, <code>.txt</code> is added (<code>&quot;MyHubKey&quot;</code> becomes <code>MyHubKey.txt</code>).</td>
+</tr>
+<tr>
+<td><code>AutoLogin</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>Skip the panel when the saved key is still valid.</td>
+</tr>
+<tr>
+<td><code>CaseSensitive</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>Set <code>false</code> to treat <code>ABC</code> and <code>abc</code> as the same key.</td>
+</tr>
+<tr>
+<td><code>MaxAttempts</code></td>
+<td>number</td>
+<td>5</td>
+<td>Wrong keys allowed before the panel locks. <code>0</code> means unlimited.</td>
+</tr>
+<tr>
+<td><code>Lockout</code></td>
+<td>number</td>
+<td>30</td>
+<td>Seconds the panel stays locked after too many wrong keys.</td>
+</tr>
+<tr>
+<td><code>KickOnLock</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Kick the player when <code>MaxAttempts</code> is reached.</td>
+</tr>
+<tr>
+<td><code>Closable</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>Show the close (X) button.</td>
+</tr>
+<tr>
+<td><code>Wait</code></td>
+<td>boolean</td>
+<td>true</td>
+<td><code>true</code>: the script waits for the result. <code>false</code>: returns a handle with <code>:Close()</code> right away, use <code>OnSuccess</code>. (<code>Key</code> inside <code>CreateWindow</code> always waits.)</td>
+</tr>
+<tr>
+<td><code>Sounds</code></td>
+<td>boolean</td>
+<td>true</td>
+<td>Click sounds on the panel.</td>
+</tr>
+<tr>
+<td><code>Texts</code></td>
+<td>table</td>
+<td>none</td>
+<td>Replaces any text shown by the panel (see Changing the text).</td>
+</tr>
+<tr>
+<td><code>OnSuccess</code></td>
+<td>function</td>
+<td>none</td>
+<td><code>function(key, info)</code> called after a valid key.</td>
+</tr>
+<tr>
+<td><code>OnClose</code></td>
+<td>function</td>
+<td>none</td>
+<td>Called when the player closes the panel without a valid key.</td>
+</tr>
+<tr>
+<td><code>Enabled</code></td>
+<td>boolean</td>
+<td>true</td>
+<td><code>false</code> skips the key panel and lets the player in.</td>
+</tr>
+<tr>
+<td><code>Force</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Show the panel again even if a key was already accepted in this session.</td>
+</tr>
+<tr>
+<td><code>CacheTime</code></td>
+<td>number</td>
+<td>60</td>
+<td>Seconds the list from <code>Url</code> is kept before it is downloaded again.</td>
+</tr>
+</tbody></table></div>
+<h3>Key entries</h3>
+<p>A key can be a plain string, or a table when you want extra rules:</p>
+<pre><code class="language-lua">Keys = {
+    &quot;FREE-KEY-1&quot;,                                                    -- never expires
+    { Key = &quot;WEEK-2222&quot;, Expire = os.time({ year = 2027, month = 1, day = 1 }) },
+    { Key = &quot;VIP-3333&quot;,  Tier = &quot;VIP&quot;, Note = &quot;Thanks for supporting!&quot; },
+    { Key = &quot;DEVICE-4444&quot;, HWID = &quot;paste-the-device-id-here&quot; },
+}
+</code></pre>
+<ul>
+<li><code>Expire</code>: Unix time in seconds (UTC). After that moment the key is rejected with <em>This key has expired</em>. <code>os.time({ year = 2027, month = 1, day = 1 })</code> gives you the number.</li>
+<li><code>HWID</code>: locks the key to one device. Run <code>print(Library:GetHWID())</code> on that device to get the id.</li>
+<li><code>Tier</code> and <code>Note</code>: anything you want. They come back to you in <code>info</code> so you can unlock VIP features.</li>
+<li>You can also write keys as a dictionary: <code>Keys = { [&quot;FREE-KEY-1&quot;] = true, [&quot;VIP-2222&quot;] = { Tier = &quot;VIP&quot; } }</code>.</li>
+</ul>
+<h3>Turning it on and off (true / false)</h3>
+<p>The key system is a simple switch. <code>true</code> shows the key panel, <code>false</code> skips it and your hub opens right away.</p>
+<pre><code class="language-lua">-- 1) per window, like Rayfield
+local Window = Library:CreateWindow({
+    Name = &quot;My Hub&quot;,
+    KeySystem = false,      -- true = ask for a key, false = no key panel
+    KeySettings = { Key = { &quot;RXM-1234&quot; } },
+})
+
+-- 2) one switch for the whole library
+Library:SetKeyEnabled(false)    -- off: everything opens without a key
+Library:SetKeyEnabled(true)     -- on again
+
+-- 3) inside the key options (same as KeySystem = false)
+KeySettings = { Enabled = false, Key = { &quot;RXM-1234&quot; } }
+
+-- old style: Key = true or Key = false works the same way
+</code></pre>
+<p><code>KeySystem</code> in <code>CreateWindow</code> and <code>Library:SetKeyEnabled</code> are the same switch, the last one you set wins. <code>KeySystem = true</code> without <code>KeySettings</code> uses the options you stored with <code>Library:SetKeyConfig</code>. While the key system is off, <code>Library:IsKeyValid()</code> returns <code>true</code> so your features stay unlocked.</p>
+<h3>Disabled keys (true / false)</h3>
+<p>In a key list, <code>true</code> means the key works and <code>false</code> means it was turned off. A disabled key shows <em>This key has been disabled</em> instead of <em>Invalid key</em>.</p>
+<pre><code class="language-lua">Keys = {
+    [&quot;FREE-KEY-1&quot;] = true,                    -- works
+    [&quot;OLD-KEY-2&quot;]  = false,                   -- disabled
+    { Key = &quot;VIP-3333&quot;, Active = false },     -- disabled (table style)
+}
+</code></pre>
+<p>It works the same in a server list. In a text file add <code>|false</code> after the key, in JSON use <code>true</code> and <code>false</code> as values:</p>
+<pre><code># keys.txt
+FREE-KEY-1
+OLD-KEY-2|false
+VIP-3333|1798761600
+</code></pre>
+<pre><code>{ &quot;FREE-KEY-1&quot;: true, &quot;OLD-KEY-2&quot;: false }
+</code></pre>
+<h3>Check a key without the panel</h3>
+<p>If your hub has its own key box, you can check the key yourself. Both functions return <code>true</code> or <code>false</code> and follow the same <code>Keys</code>, <code>Url</code> and <code>Validate</code> rules as the panel.</p>
+<pre><code class="language-lua">-- only checks, saves nothing
+if Library:IsKey(&quot;RXM-1234&quot;) then
+    print(&quot;valid&quot;)
+else
+    print(&quot;invalid&quot;)
+end
+
+-- checks and accepts the key (it is saved like in the panel)
+local ok, message = Library:SubmitKey(myTextBox.Text)
+if not ok then
+    warn(message)           -- for example &quot;Invalid key&quot;
+end
+</code></pre>
+<p>When the key system is off, <code>IsKey</code> and <code>SubmitKey</code> always return <code>true</code>.</p>
+<h3>Key list on a website (GrabKeyFromSite)</h3>
+<p>Keys written inside the script cannot be changed later. With <code>GrabKeyFromSite = true</code> you keep the list in a file you control, so you can add, remove or expire keys without updating the script. The first item of <code>Key</code> is the link.</p>
+<pre><code class="language-lua">KeySystem = true,
+KeySettings = {
+    Title = &quot;My Hub&quot;,
+    Key = { &quot;https://raw.githubusercontent.com/you/keys/main/keys.txt&quot; },
+    GrabKeyFromSite = true,      -- true = the first item of Key is a link
+    KeyLink = &quot;https://example.com/get-key&quot;,
+},
+</code></pre>
+<p>The RXM way to write the same thing is <code>Url = &quot;https://...&quot;</code> inside <code>KeySettings</code>. You can also mix: a <code>Url</code> list and a few keys written in <code>Key</code> work together.</p>
+<p>The file can be plain text, one key per line. Lines starting with <code>#</code> are ignored, and <code>|</code> adds an expiry time:</p>
+<pre><code># keys.txt
+FREE-KEY-1
+VIP-2222|1798761600
+</code></pre>
+<p>Or JSON, either a list or an object with a <code>keys</code> list:</p>
+<pre><code>{
+  &quot;keys&quot;: [
+    &quot;FREE-KEY-1&quot;,
+    { &quot;Key&quot;: &quot;VIP-2222&quot;, &quot;Expire&quot;: 1798761600, &quot;Tier&quot;: &quot;VIP&quot; }
+  ]
+}
+</code></pre>
+<p>The link must return the raw text (for GitHub use the <em>Raw</em> link). Your executor needs <code>request</code> or <code>game:HttpGet</code>. If the server cannot be reached, the panel shows <em>Could not reach the key server</em>, and that try is <strong>not</strong> counted as a wrong key.</p>
+<h3>Your own check (Validate)</h3>
+<p>If you use a key service or your own API, pass a <code>Validate</code> function. It may wait for a web request. Return <code>true</code> for a good key, or <code>false</code> plus a message to show the player. A third value (a table) is stored as the key info.</p>
+<pre><code class="language-lua">KeySystem = true,
+KeySettings = {
+    KeyLink  = &quot;https://example.com/get-key&quot;,
+    Validate = function(key)
+        local url = &quot;https://your-api.example.com/check?key=&quot; .. game:GetService(&quot;HttpService&quot;):UrlEncode(key)
+        local ok, body = pcall(function() return game:HttpGet(url) end)
+        if not ok then
+            return false, &quot;Server is offline, try again later&quot;
+        end
+        if body == &quot;valid&quot; then
+            return true, nil, { Tier = &quot;VIP&quot; }       -- ok, message, info
+        end
+        return false, &quot;That key was rejected&quot;
+    end,
+}
+</code></pre>
+<h3>Saved key and auto login</h3>
+<ul>
+<li>With <code>SaveKey = true</code>, a valid key is written to <code>RXM_Key.txt</code> (change it with <code>FileName</code>, <code>.txt</code> is added if you write no extension). The next time, the saved key is checked silently and the panel is skipped.</li>
+<li>If the saved key is no longer valid (expired, removed from the list), the file is deleted and the panel opens with a short message.</li>
+<li>Saving needs <code>writefile</code>, <code>readfile</code> and <code>isfile</code>. Without them the player just types the key each time. Use <code>SaveKey = false</code> to never save.</li>
+<li>The key is <strong>never</strong> written into the config file made by <code>SaveConfig</code>.</li>
+<li>To forget the key from code, call <code>Library:ClearSavedKey()</code>. Players can also press <em>Remove Saved Key</em> in the Settings tab.</li>
+</ul>
+<h3>Wrong keys and lockout</h3>
+<p>Each wrong key shakes the panel and shows how many tries are left. After <code>MaxAttempts</code> wrong keys the box locks for <code>Lockout</code> seconds with a countdown, then the tries reset. Use <code>MaxAttempts = 0</code> for unlimited tries, or <code>KickOnLock = true</code> to kick the player instead of waiting.</p>
+<h3>Reading the key later</h3>
+<pre><code class="language-lua">if Library:IsKeyValid() then
+    print(Library:GetKey())              -- the accepted key
+    print(Library:GetKeyStatusText())    -- &quot;Lifetime&quot; or &quot;2d 4h left&quot;
+
+    local info = Library:GetKeyInfo()    -- { Key, Expire, Tier, Note }
+    if info.Tier == &quot;VIP&quot; then
+        -- unlock VIP features here
+    end
+end
+</code></pre>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Library:KeySystem(options)</code></td>
+<td>ok, info</td>
+<td>Shows the panel and waits. Also named <code>CreateKeySystem</code>.</td>
+</tr>
+<tr>
+<td><code>Library:SetKeyConfig(table)</code></td>
+<td>none</td>
+<td>Stores default key options (used when you pass <code>Key = true</code>).</td>
+</tr>
+<tr>
+<td><code>Library:CheckKey(key, options)</code></td>
+<td>ok, message, info</td>
+<td>Checks a key without showing any panel.</td>
+</tr>
+<tr>
+<td><code>Library:IsKey(key, options)</code></td>
+<td>boolean</td>
+<td>True or false. Checks a key, saves nothing.</td>
+</tr>
+<tr>
+<td><code>Library:SubmitKey(key, options)</code></td>
+<td>boolean, message</td>
+<td>Checks a key without a panel. A good key is accepted and saved.</td>
+</tr>
+<tr>
+<td><code>Library:SetKeyEnabled(boolean)</code></td>
+<td>none</td>
+<td><code>true</code> = key system on, <code>false</code> = off for the whole library.</td>
+</tr>
+<tr>
+<td><code>Library:IsKeyEnabled()</code></td>
+<td>boolean</td>
+<td>True when the key system is on.</td>
+</tr>
+<tr>
+<td><code>Library:IsKeyValid()</code></td>
+<td>boolean</td>
+<td>True after a key was accepted, or when the key system is off.</td>
+</tr>
+<tr>
+<td><code>Library:GetKey()</code></td>
+<td>string or nil</td>
+<td>The accepted key.</td>
+</tr>
+<tr>
+<td><code>Library:GetKeyInfo()</code></td>
+<td>table or nil</td>
+<td>Copy of <code>{ Key, Expire, Tier, Note }</code>.</td>
+</tr>
+<tr>
+<td><code>Library:GetKeyTimeLeft()</code></td>
+<td>number or nil</td>
+<td>Seconds left. <code>math.huge</code> means no expiry.</td>
+</tr>
+<tr>
+<td><code>Library:GetKeyStatusText()</code></td>
+<td>string</td>
+<td><code>Lifetime</code>, <code>2d 4h left</code> or <code>No key</code>.</td>
+</tr>
+<tr>
+<td><code>Library:GetMaskedKey()</code></td>
+<td>string</td>
+<td>Key with the middle hidden, like <code>RXM*********ABC</code>.</td>
+</tr>
+<tr>
+<td><code>Library:GetSavedKey(file)</code></td>
+<td>string or nil</td>
+<td>Reads the saved key from the file.</td>
+</tr>
+<tr>
+<td><code>Library:ClearSavedKey(file)</code></td>
+<td>none</td>
+<td>Deletes the saved key file.</td>
+</tr>
+<tr>
+<td><code>Library:ForgetKey()</code></td>
+<td>none</td>
+<td>Deletes the saved key and marks the session as not logged in.</td>
+</tr>
+<tr>
+<td><code>Library:GetHWID()</code></td>
+<td>string</td>
+<td>Device id used for <code>HWID</code> locks.</td>
+</tr>
+</tbody></table></div>
+<h3>Changing the text</h3>
+<p>The panel follows your UI color, preset, font and transparency, so set them before <code>CreateWindow</code> (or use <code>AutoLoad</code>). Every text can be replaced with <code>Texts</code>, for example to translate it:</p>
+<pre><code class="language-lua">KeySystem = true,
+KeySettings = {
+    Key   = { &quot;RXM-1234-ABCD&quot; },
+    Title = &quot;MY HUB&quot;,
+    Texts = {
+        Subtitle = &quot;Masukkan key untuk lanjut&quot;,
+        Verify   = &quot;Masuk&quot;,
+        Invalid  = &quot;Key salah&quot;,
+        Attempts = &quot;Sisa percobaan: %d&quot;,     -- %d = tries left
+        Locked   = &quot;Coba lagi dalam %ds&quot;,     -- %d = seconds left
+    },
+}
+</code></pre>
+<p>Available text names: <code>Title</code>, <code>Subtitle</code>, <code>Placeholder</code>, <code>Verify</code>, <code>Checking</code>, <code>Accepted</code>, <code>GetKey</code>, <code>Discord</code>, <code>Copied</code>, <code>Empty</code>, <code>Invalid</code>, <code>Expired</code>, <code>WrongDevice</code>, <code>Revoked</code>, <code>Offline</code>, <code>Valid</code>, <code>Attempts</code>, <code>Locked</code>, <code>LockedBtn</code>, <code>LinkCopied</code>, <code>NoClipboard</code>, <code>SavedExpired</code>, <code>Kick</code>.</p>
+<h3>Keep in mind</h3>
+<p><strong>A key check inside a Roblox script is only a gate, not a lock.</strong> Anyone who can read your script can read the keys written in it, and a determined user can remove the check. Using <code>Url</code> or <code>Validate</code> with your own server is much safer than a fixed list, and the best protection is to keep your real features on the server side of that check.</p>
+</section>
+<section class="doc-section" data-id="8-colors-and-theme"><h2 id="8-colors-and-theme"><a class="anchor" href="#8-colors-and-theme" aria-label="Link to this section">#</a>8. Colors and theme</h2>
+<pre><code class="language-lua">Library:SetPreset(&quot;Crimson&quot;)                       -- ready-made accent color
+Library:SetAccent(Color3.fromRGB(255, 60, 80))     -- any color
+Library:SetTheme({ Background = Color3.fromRGB(8, 8, 20), Card = Color3.fromRGB(20, 20, 36) })
+</code></pre>
+<ul>
+<li>Presets: <code>Monochrome</code> (default), <code>Crimson</code>, <code>Ocean</code>, <code>Violet</code>, <code>Emerald</code>, <code>Sunset</code>, <code>Sakura</code>, <code>Gold</code>.</li>
+<li>Theme keys: <code>Accent</code>, <code>Accent2</code>, <code>Background</code>, <code>Card</code>, <code>CardHover</code>, <code>Stroke</code>, <code>Track</code>, <code>Off</code>, <code>Text</code>, <code>Muted</code>, <code>Input</code>, <code>Button</code>, <code>Dark</code>.</li>
+<li>Colors update live: the whole UI changes the moment you call these functions.</li>
+</ul>
+<h3>Transparency (glass look)</h3>
+<pre><code class="language-lua">Library:SetTransparency(0.3)          -- 0 = solid, 0.9 = very see-through (default 0.2)
+Library:CreateWindow({ Name = &quot;My Hub&quot;, Transparency = 0.3 })
+</code></pre>
+<p>The window background, the tab bar, the cards and the notifications become translucent, so the game shows through. Roblox cannot blur the area behind a single UI element, so this is transparency without blur.</p>
+<h3>Dynamic Island length</h3>
+<pre><code class="language-lua">Library:CreateWindow({ Name = &quot;My Hub&quot;, IslandWidth = 200 })   -- longer pill before opening
+Window:SetIslandWidth(160)                                        -- change it any time
+</code></pre>
+<h3>Yin-Yang theme</h3>
+<p>The library can draw a yin-yang by itself (no image asset needed). It is built from UI shapes, so it stays sharp at any size.</p>
+<pre><code class="language-lua">-- 1) Loading screen
+Library:AddIntro(&quot;Balance&quot;, { Style = &quot;YinYang&quot;, Text = &quot;MY HUB&quot;, Subtitle = &quot;BALANCE&quot;, Duration = 5 })
+Library:SetIntro(&quot;Balance&quot;)
+
+-- 2) Window icon (the pill and the header icon spin automatically)
+local Window = Library:CreateWindow({ Name = &quot;My Hub&quot;, Icon = &quot;yinyang&quot; })
+
+-- 3) Draw it anywhere you like
+local yy = Library:CreateYinYang(parentFrame, 96)                      -- default: black and white
+yy:SetColors(Color3.fromRGB(10, 10, 10), Color3.fromRGB(255, 80, 80))  -- dark half, light half
+yy:SetTransparency(0.5)
+yy.Frame.Rotation = 45
+</code></pre>
+<p>Every window also shows a faint slow-spinning yin-yang watermark in the panel corner. Turn it off with <code>Effects = { YinYang = false }</code>, <code>Window:SetEffect(&quot;YinYang&quot;, false)</code>, or the Settings tab.</p>
+</section>
+<section class="doc-section" data-id="9-icons"><h2 id="9-icons"><a class="anchor" href="#9-icons" aria-label="Link to this section">#</a>9. Icons</h2>
+<p>The library ships with <strong>120+ vector icons</strong>, including a <code>yinyang</code> icon. They are drawn in code, so they need no asset ids, they scale cleanly and they take the accent color.</p>
+<h3>Writing icons manually</h3>
+<pre><code class="language-lua">local icon = Library.icon
+
+Window:AddTab(icon.sword(&quot;Combat&quot;))              -- tab with an icon
+Main:Section(icon.combat(&quot;Combat&quot;))              -- section with an icon
+Main:Section(icon:visual(&quot;Visual&quot;))              -- a colon works as well
+Main:Toggle(icon.zap({ Name = &quot;Speed&quot;, Callback = print }))
+</code></pre>
+<p>There are also plain forms: <code>Window:AddTab(&quot;Combat&quot;, &quot;sword&quot;)</code>, <code>Main:Section(&quot;Combat&quot;, &quot;sword&quot;)</code>, and the <code>Icon = &quot;sword&quot;</code> option on any element.</p>
+<h3>Where icons can be used</h3>
+<ul>
+<li>Tabs, sections, labels and every element (<code>Icon = &quot;name&quot;</code>).</li>
+<li>The window (<code>CreateWindow({ Icon = &quot;shield&quot; })</code> or <code>Window:SetIcon(&quot;shield&quot;)</code>).</li>
+<li>Notifications (<code>Icon = &quot;bell&quot;</code>) and the intro (<code>Icon = &quot;crown&quot;</code>).</li>
+</ul>
+<h3>Finding icon names</h3>
+<pre><code class="language-lua">print(table.concat(Library:GetIconNames(), &quot;, &quot;))   -- all names
+</code></pre>
+<p>Or add an <code>IconPicker</code>, or use the Settings tab, to browse them with a search box. A few examples: <code>home</code>, <code>settings</code>, <code>search</code>, <code>bell</code>, <code>star</code>, <code>heart</code>, <code>sword</code>, <code>shield</code>, <code>skull</code>, <code>crown</code>, <code>gem</code>, <code>zap</code>, <code>flame</code>, <code>eye</code>, <code>user</code>, <code>users</code>, <code>lock</code>, <code>key</code>, <code>map-pin</code>, <code>globe</code>, <code>gauge</code>, <code>bug</code>, <code>code</code>, <code>terminal</code>, <code>sliders</code>, <code>wifi</code>, <code>play</code>, <code>pause</code>, <code>arrow-up</code>, <code>chevron-down</code>, <code>check</code>, <code>x</code>.</p>
+<h3>Category aliases</h3>
+<p>You can write a category name and the library picks a matching icon: <code>combat</code> is sword, <code>main</code> is home, <code>visual</code> and <code>esp</code> are eye, <code>player</code> is user, <code>teleport</code> is map-pin, <code>farm</code> is leaf, <code>misc</code> is box, <code>config</code> is sliders, <code>fps</code> and <code>antilag</code> are gauge, and many more. Add your own:</p>
+<pre><code class="language-lua">Library:AddIconAlias(&quot;boss&quot;, &quot;skull&quot;)
+</code></pre>
+<h3>Using your own images as icons</h3>
+<pre><code class="language-lua">Library:AddIcon(&quot;logo&quot;, &quot;rbxassetid://1234567890&quot;)                          -- a single image
+Library:AddIcon(&quot;sheet1&quot;, { Image = &quot;rbxassetid://111&quot;, Offset = Vector2.new(0, 0), Size = Vector2.new(48, 48) })  -- sprite sheet
+Main:Toggle({ Name = &quot;Custom&quot;, Icon = &quot;logo&quot; })
+</code></pre>
+<p>You can also pass an asset id directly: <code>Icon = &quot;rbxassetid://1234567890&quot;</code>.</p>
+</section>
+<section class="doc-section" data-id="10-fonts"><h2 id="10-fonts"><a class="anchor" href="#10-fonts" aria-label="Link to this section">#</a>10. Fonts</h2>
+<p>The default font is <strong>Silkscreen</strong> (Creator Store asset <code>12187371840</code>). The library includes <strong>85 fonts from the Roblox Creator Store</strong> and 37 Roblox built-in fonts (122 in total), including Poppins, Inter, Montserrat, Open Sans, Roboto Slab, Pacifico and many more.</p>
+<pre><code class="language-lua">Library:SetFont(&quot;Poppins&quot;)                 -- by name
+Library:SetFont(12187371840)               -- by asset id
+Library:SetFont(&quot;Gotham&quot;)                  -- classic Roblox look
+Library:AddFont(&quot;My Font&quot;, 1234567890)     -- register your own font family id
+print(table.concat(Library:GetFontNames(), &quot;, &quot;))
+
+local Window = Library:CreateWindow({ Name = &quot;My Hub&quot;, Font = &quot;Inter&quot; })
+</code></pre>
+<ul>
+<li>Changing the font updates all existing text instantly, including the intro.</li>
+<li>Some fonts (for example the Noto Serif and M PLUS families for Asian languages) are large, so they can load slowly on phones.</li>
+<li>Pixel and display fonts are best for short text. Pick a plain font (Inter, Poppins, Open Sans) for long text.</li>
+</ul>
+</section>
+<section class="doc-section" data-id="11-the-built-in-settings-tab"><h2 id="11-the-built-in-settings-tab"><a class="anchor" href="#11-the-built-in-settings-tab" aria-label="Link to this section">#</a>11. The built-in Settings tab</h2>
+<p><code>Window:CreateSettingsTab()</code> adds a ready-made tab where players can customise your hub. <strong>By default it only shows Effects.</strong> Every other part below is hidden until you set it to <code>false</code> (see &quot;Choose what Settings shows&quot;).</p>
+<ul>
+<li><strong>Appearance</strong>: UI color picker, presets, UI scale, UI transparency, Dynamic Island width, hide/show key.</li>
+<li><strong>Font</strong> and <strong>Icons</strong>: searchable pickers for the UI font, window icon and intro icon.</li>
+<li><strong>Effects</strong>: switch the neon border, glow, aurora, embers, the click, notify, slider and switch sounds and more.</li>
+<li><strong>Intro</strong>: loading-screen switch, intro text, subtitle, image, sound, duration, color, style and a Preview Intro button.</li>
+<li><strong>Config</strong>: Save Config and Load Config buttons.</li>
+<li><strong>Key</strong> (only after a key was used): the masked key, the time left and a Remove Saved Key button.</li>
+<li><strong>UI</strong>: a Destroy UI button that removes the whole UI (tap twice to confirm).</li>
+</ul>
+<h3>Choose what Settings shows</h3>
+<p>Pass a table as the second argument. <code>true</code> hides a part, <code>false</code> shows it. Anything you leave out keeps its default.</p>
+<pre><code class="language-lua">-- Default: only Effects
+Window:CreateSettingsTab(&quot;Settings&quot;)
+
+-- Also show the Destroy UI button
+Window:CreateSettingsTab(&quot;Settings&quot;, { DestroyUI = false })
+
+-- Also show the color picker, transparency slider and config buttons
+Window:CreateSettingsTab(&quot;Settings&quot;, {
+    UIColor = false,
+    UITransparency = false,
+    Config = false,
+})
+
+-- Hide everything (the tab stays, but it is empty)
+Window:CreateSettingsTab(&quot;Settings&quot;, { Effects = true, DestroyUI = true })
+</code></pre>
+<div class="tablewrap"><table>
+<thead>
+<tr><th>Name</th><th>What it controls</th><th>Default</th></tr>
+</thead>
+<tbody>
+<tr><td><code>UIColor</code></td><td>UI color picker</td><td><code>true</code> (hidden)</td></tr>
+<tr><td><code>Preset</code></td><td>Color presets</td><td><code>true</code></td></tr>
+<tr><td><code>UIScale</code></td><td>UI Scale slider</td><td><code>true</code></td></tr>
+<tr><td><code>UITransparency</code></td><td>UI Transparency slider</td><td><code>true</code></td></tr>
+<tr><td><code>IslandWidth</code></td><td>Dynamic Island width slider</td><td><code>true</code></td></tr>
+<tr><td><code>ToggleKey</code></td><td>Hide / Show UI keybind</td><td><code>true</code></td></tr>
+<tr><td><code>Font</code></td><td>UI font picker</td><td><code>true</code></td></tr>
+<tr><td><code>Icon</code></td><td>UI icon picker</td><td><code>true</code></td></tr>
+<tr><td><code>Effects</code></td><td>Effect toggles and Border Speed</td><td><code>false</code> (shown)</td></tr>
+<tr><td><code>Intro</code></td><td>All loading-screen settings</td><td><code>true</code></td></tr>
+<tr><td><code>Config</code></td><td>Save Config and Load Config</td><td><code>true</code></td></tr>
+<tr><td><code>Key</code></td><td>Key info and Remove Saved Key (only after a key was used)</td><td><code>true</code></td></tr>
+<tr><td><code>DestroyUI</code></td><td>Destroy UI button</td><td><code>true</code></td></tr>
+</tbody>
+</table></div>
+<p>If you hide <code>DestroyUI</code> and the panel has no close button, the UI can only be removed from code with <code>Window:Destroy()</code>.</p>
+<h3>Touch and scrolling</h3>
+<p>On phones, sliders only start moving when you drag sideways. Scrolling up or down over a slider scrolls the page, and a short tap on the track still sets the value.</p>
+<h3>Saving settings</h3>
+<pre><code class="language-lua">Library:SaveConfig(&quot;MyHub.json&quot;)        -- writes color, font, intro and window settings
+Library:LoadConfig(&quot;MyHub.json&quot;)
+
+Library:CreateWindow({ Name = &quot;My Hub&quot;, ConfigFile = &quot;MyHub.json&quot;, AutoLoad = true })
+</code></pre>
+<p>Saving needs an executor that supports <code>writefile</code>, <code>readfile</code> and <code>isfile</code>. Without them, everything else still works.</p>
+</section>
+<section class="doc-section" data-id="12-where-does-my-script-logic-go"><h2 id="12-where-does-my-script-logic-go"><a class="anchor" href="#12-where-does-my-script-logic-go" aria-label="Link to this section">#</a>12. Where does my script logic go?</h2>
+<p>The library only draws the interface. Put your features in <strong>callbacks</strong>, and keep their state in normal Lua variables:</p>
+<pre><code class="language-lua">local RunService = game:GetService(&quot;RunService&quot;)
+local farming, speed = false, 25
+
+Main:Toggle({
+    Name = &quot;Auto Farm&quot;,
+    Callback = function(on)
+        farming = on
+        if on then
+            task.spawn(function()
+                while farming do
+                    -- your farming logic here
+                    task.wait(0.1)
+                end
+            end)
+        end
+    end,
+})
+
+Main:Slider({ Name = &quot;Speed&quot;, Min = 0, Max = 100, Default = speed, Callback = function(v) speed = v end })
+
+local conn
+Main:Toggle({
+    Name = &quot;Anti Lag&quot;,
+    Callback = function(on)
+        if on then
+            conn = RunService.Heartbeat:Connect(function()
+                -- your code here
+            end)
+        elseif conn then
+            conn:Disconnect()
+            conn = nil
+        end
+    end,
+})
+</code></pre>
+<p>Tips:</p>
+<ul>
+<li><strong>Toggle</strong> is for a feature that stays on or off. <strong>Button</strong> is for a one-time action.</li>
+<li><strong>Slider, Dropdown and Input</strong> send their value to the callback: store it in a variable and read it in your engine.</li>
+<li>Long engines can live in their own raw file: call <code>loadstring(game:HttpGet(&quot;ENGINE_LINK&quot;))()</code> from a callback.</li>
+</ul>
+</section>
+<section class="doc-section" data-id="13-api-cheat-sheet"><h2 id="13-api-cheat-sheet"><a class="anchor" href="#13-api-cheat-sheet" aria-label="Link to this section">#</a>13. API cheat sheet</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Functions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Window</td>
+<td><code>CreateWindow</code>, <code>GetWindow</code>, <code>Unload</code>, <code>Notify</code></td>
+</tr>
+<tr>
+<td>Intro</td>
+<td><code>AddIntro</code>, <code>SetIntro</code>, <code>AddIntroStyle</code>, <code>PlayIntro</code>, <code>SetIntroEnabled</code>, <code>SetIntroText</code>, <code>SetIntroImage</code>, <code>SetIntroSound</code>, <code>SetIntroStyle</code>, <code>SetIntroDuration</code>, <code>SetIntroColor</code>, <code>GetIntroConfig</code></td>
+</tr>
+<tr>
+<td>Theme</td>
+<td><code>SetAccent</code> (also <code>SetUIColor</code>), <code>SetPreset</code>, <code>SetTheme</code>, <code>SetTransparency</code>, <code>GetAccent</code>, <code>OnThemeChanged</code>, <code>Presets</code></td>
+</tr>
+<tr>
+<td>Icons</td>
+<td><code>icon.name(...)</code>, <code>CreateIcon</code>, <code>AddIcon</code>, <code>AddIconAlias</code>, <code>GetIconNames</code>, <code>GetIconAliases</code>, <code>HasIcon</code></td>
+</tr>
+<tr>
+<td>Yin-Yang</td>
+<td><code>CreateYinYang</code> (<code>:SetColors</code>, <code>:SetTransparency</code>, <code>:Destroy</code>), intro style <code>YinYang</code>, icon <code>yinyang</code></td>
+</tr>
+<tr>
+<td>Fonts</td>
+<td><code>SetFont</code>, <code>GetFont</code>, <code>AddFont</code>, <code>GetFontNames</code>, <code>GetFontInfo</code>, <code>Fonts</code></td>
+</tr>
+<tr>
+<td>Key system</td>
+<td><code>KeySystem</code> (also <code>CreateKeySystem</code>), <code>SetKeyConfig</code>, <code>CheckKey</code>, <code>IsKey</code>, <code>SubmitKey</code>, <code>SetKeyEnabled</code>, <code>IsKeyEnabled</code>, <code>IsKeyValid</code>, <code>GetKey</code>, <code>GetKeyInfo</code>, <code>GetKeyTimeLeft</code>, <code>GetKeyStatusText</code>, <code>GetMaskedKey</code>, <code>GetSavedKey</code>, <code>ClearSavedKey</code>, <code>ForgetKey</code>, <code>GetHWID</code></td>
+</tr>
+<tr>
+<td>Config</td>
+<td><code>SaveConfig</code>, <code>LoadConfig</code>, <code>Flags</code></td>
+</tr>
+</tbody></table></div>
+</section>
+<section class="doc-section" data-id="14-troubleshooting"><h2 id="14-troubleshooting"><a class="anchor" href="#14-troubleshooting" aria-label="Link to this section">#</a>14. Troubleshooting</h2>
+<ul>
+<li><strong>Nothing appears</strong>: check that the raw link opens in a browser and returns plain Lua text. Run the script again; loading it twice automatically replaces the old UI.</li>
+<li><strong>Intro image does not show</strong>: the id may be a decal or a private asset. Try a different id, an <code>rbxthumb://</code> link, or a PNG link starting with <code>https://</code> (needs <code>writefile</code> and <code>getcustomasset</code>). A letter is shown until the image loads.</li>
+<li><strong>No sound</strong>: the sound id must be a public audio asset. The UI sounds can also be switched off in Settings, Effects (Click, Notify, Slider and Switch Sounds).</li>
+<li><strong>Text looks different</strong>: you changed the font. Use <code>Library:SetFont(&quot;Gotham&quot;)</code> to return to the classic look.</li>
+<li><strong>A callback fails</strong>: the library shows the error message as a red notification. Fix the code inside the callback.</li>
+<li><strong>Phone layout</strong>: the panel resizes automatically. If it is still too big, lower <code>Scale</code> (for example <code>0.8</code>).</li>
+<li><strong>Remove the UI completely</strong>: show the Destroy UI button with <code>DestroyUI = false</code> in Settings and press it, or call <code>Library:Unload()</code> from your script.</li>
+<li><strong>My script stops after the key panel</strong>: the player closed it, so <code>CreateWindow</code> returned <code>nil</code>. Add <code>if not Window then return end</code> right after <code>CreateWindow</code>.</li>
+<li><strong>A correct key is rejected</strong>: spaces around the key are removed automatically, but upper and lower case matter (set <code>CaseSensitive = false</code> if you want). Also check that <code>Expire</code> is a Unix time in seconds and that <code>HWID</code> matches the player&#39;s device.</li>
+<li><strong>&quot;Could not reach the key server&quot;</strong>: your executor needs <code>request</code> or <code>game:HttpGet</code>, and the <code>Url</code> must open in a browser and return plain text or JSON. This does not count as a wrong key.</li>
+<li><strong>The key panel does not show up</strong>: <code>KeySettings</code> is only read when <code>KeySystem = true</code>. Also check that you did not call <code>Library:SetKeyEnabled(false)</code> earlier.</li>
+<li><strong>The key is not remembered</strong>: saving needs <code>writefile</code>, <code>readfile</code> and <code>isfile</code>. If the saved key expired, the file is deleted on purpose.</li>
+<li><strong>The panel is locked</strong>: wait for the countdown, or set <code>MaxAttempts = 0</code> for unlimited tries.</li>
+<li><strong>The panel closes when I tap outside it</strong>: this is by design. Tap the pill again to reopen it.</li>
+</ul>
+</section></div>
+    <div class="empty" id="empty">No sections match your search.</div>
+  </main>
+</div>
+<footer>RXM UI Library - UI only. You bring the logic.</footer>
+<button class="totop" id="totop" type="button" aria-label="Back to top"><svg viewBox="-100 -100 200 200" aria-hidden="true"><use href="#yy-sym"/></svg></button>
+<script>
+(function(){
+  var KW = {}; "and break do else elseif end false for function if in local nil not or repeat return then true until while".split(" ").forEach(function(k){KW[k]=1});
+  var BI = {}; "game workspace Enum Color3 Vector2 Vector3 UDim2 UDim Instance task math string table print pcall loadstring tostring tonumber ipairs pairs typeof Font Random Library".split(" ").forEach(function(k){BI[k]=1});
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+  function highlight(code){
+    var out = "", i = 0, n = code.length, m, rest;
+    while (i < n){
+      rest = code.slice(i);
+      if ((m = /^--\[(=*)\[[\s\S]*?\]\1\]/.exec(rest))) { out += '<span class="tk-com">' + esc(m[0]) + '</span>'; i += m[0].length; }
+      else if ((m = /^--[^\n]*/.exec(rest))) { out += '<span class="tk-com">' + esc(m[0]) + '</span>'; i += m[0].length; }
+      else if ((m = /^"(?:\\.|[^"\\\n])*"|^'(?:\\.|[^'\\\n])*'/.exec(rest))) { out += '<span class="tk-str">' + esc(m[0]) + '</span>'; i += m[0].length; }
+      else if ((m = /^\d+(?:\.\d+)?/.exec(rest))) { out += '<span class="tk-num">' + m[0] + '</span>'; i += m[0].length; }
+      else if ((m = /^[A-Za-z_][A-Za-z_0-9]*/.exec(rest))) {
+        var w = m[0], cls = "";
+        if (KW[w]) cls = "tk-kw"; else if (BI[w]) cls = "tk-bi"; else if (code.charAt(i + w.length) === "(") cls = "tk-fn";
+        out += cls ? '<span class="' + cls + '">' + w + '</span>' : w; i += w.length;
+      }
+      else { out += esc(code[i]); i++; }
+    }
+    return out;
+  }
+  function copyText(t){
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(t).then(function(){return true}, function(){return fallback(t)});
+    }
+    return Promise.resolve(fallback(t));
+  }
+  function fallback(t){
+    var ta = document.createElement("textarea");
+    ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta); return ok;
+  }
+  function flash(btn, ok, label){
+    var old = btn.getAttribute("data-label") || btn.textContent;
+    btn.setAttribute("data-label", old);
+    btn.textContent = ok ? "Copied!" : "Press and hold to copy";
+    btn.classList.toggle("ok", ok);
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function(){ btn.textContent = old; btn.classList.remove("ok"); }, 1600);
+  }
+
+  // code blocks: label + Copy button + syntax colors
+  var firstCode = null;
+  document.querySelectorAll("pre > code").forEach(function(code){
+    var pre = code.parentNode, raw = code.textContent.replace(/\n$/, "");
+    var lang = ((code.className.match(/language-(\w+)/) || [])[1] || "text");
+    var wrap = document.createElement("div"); wrap.className = "codeblock fxc";
+    var n = raw.split("\n").length;
+    var bar = document.createElement("div"); bar.className = "codebar";
+    var label = document.createElement("span"); label.textContent = (lang === "lua" ? "Lua" : "Text") + " \u00b7 " + n + (n === 1 ? " line" : " lines");
+    var btn = document.createElement("button"); btn.className = "copy"; btn.type = "button"; btn.textContent = "Copy";
+    btn.addEventListener("click", function(){ copyText(raw).then(function(ok){ flash(btn, ok); }); });
+    bar.appendChild(label); bar.appendChild(btn);
+    var body = document.createElement("div"); body.className = "cbody";
+    var gut = document.createElement("div"); gut.className = "gut"; gut.setAttribute("aria-hidden", "true");
+    gut.textContent = Array.apply(null, Array(n)).map(function(_, i){ return i + 1; }).join("\n");
+    pre.parentNode.insertBefore(wrap, pre); wrap.appendChild(bar); wrap.appendChild(body); body.appendChild(gut); body.appendChild(pre);
+    if (n > 24) {
+      wrap.classList.add("long"); body.style.maxHeight = "430px";
+      var more = document.createElement("button"); more.type = "button"; more.className = "more"; more.textContent = "Show all " + n + " lines";
+      more.addEventListener("click", function(){ var o = wrap.classList.toggle("open"); body.style.maxHeight = o ? body.scrollHeight + "px" : "430px"; more.textContent = o ? "Collapse" : "Show all " + n + " lines"; if (!o) wrap.scrollIntoView({block: "nearest", behavior: "smooth"}); });
+      wrap.appendChild(more);
+    }
+    if (lang === "lua") code.innerHTML = highlight(raw);
+    if (!firstCode && lang === "lua" && /CreateWindow/.test(raw) && pre.closest('[data-id="2-quick-start"]')) firstCode = raw;
+  });
+  var cq = document.getElementById("copyQuick");
+  cq.addEventListener("click", function(){
+    var text = firstCode;
+    if (!text) { var any = document.querySelector(".codeblock pre code"); text = any ? any.textContent : ""; }
+    copyText(text).then(function(ok){ flash(cq, ok); });
+  });
+
+  // search
+  var q = document.getElementById("q"), sections = [].slice.call(document.querySelectorAll(".doc-section"));
+  var links = [].slice.call(document.querySelectorAll("#toc a")), empty = document.getElementById("empty");
+  var texts = sections.map(function(s){ return s.textContent.toLowerCase(); });
+  q.addEventListener("input", function(){
+    var term = q.value.trim().toLowerCase(), shown = 0;
+    sections.forEach(function(s, i){
+      var hit = !term || texts[i].indexOf(term) !== -1;
+      s.hidden = !hit; if (hit) shown++;
+      links.forEach(function(a){ if (a.getAttribute("href") === "#" + s.getAttribute("data-id")) a.classList.toggle("hide", !hit); });
+    });
+    empty.style.display = shown ? "none" : "block";
+  });
+
+  // scroll spy + back to top
+  var toTop = document.getElementById("totop");
+  toTop.addEventListener("click", function(){ window.scrollTo({top: 0, behavior: "smooth"}); });
+  function spy(){
+    toTop.classList.toggle("show", window.scrollY > 600);
+    var current = null;
+    sections.forEach(function(s){ if (!s.hidden && s.getBoundingClientRect().top < 120) current = s.getAttribute("data-id"); });
+    document.querySelectorAll("#toc a").forEach(function(a){ a.classList.toggle("active", a.getAttribute("href") === "#" + current); });
+  }
+  window.addEventListener("scroll", spy, {passive: true}); spy();
+  
+})();
+</script>
+<script>
+(function(){
+var d=document,R=matchMedia('(prefers-reduced-motion: reduce)').matches,t0=performance.now();
+/* trigram ring */
+var ring=d.getElementById('ring'),s='',i,j,v,g,y;
+for(i=0;i<8;i++){v=7-i;g='';for(j=0;j<3;j++){y=-j*7;g+=(v>>j&1)?'<rect x="-12" y="'+y+'" width="24" height="3.6" rx="1.4"/>':'<rect x="-12" y="'+y+'" width="10" height="3.6" rx="1.4"/><rect x="2" y="'+y+'" width="10" height="3.6" rx="1.4"/>'}s+='<g transform="rotate('+i*45+') translate(0,-108)">'+g+'</g>'}
+ring.insertAdjacentHTML('beforeend',s);
+/* scroll progress + yin-yang back-to-top spins with scroll */
+var tt=d.querySelector('#totop svg'),pg=d.getElementById('prog');
+function sc(){var m=d.documentElement.scrollHeight-innerHeight;pg.style.transform='scaleX('+(m>0?scrollY/m:0)+')';tt.style.transform='rotate('+(scrollY*.35)+'deg)'}
+addEventListener('scroll',sc,{passive:true});sc();
+/* ===== ULTRA engine: aurora, debu berwarna, konstelasi, yin-yang melayang, bintang jatuh, comet kursor ===== */
+(function(){
+var cv=d.getElementById('fx'),x=cv.getContext('2d'),stage=d.getElementById('stage'),tilt=d.getElementById('tilt'),yy=d.getElementById('yy');
+if(!x)return;
+var F=window.RXMFX=window.RXMFX||{level:2,calm:false,pal:'neon'};
+var lm=matchMedia('(prefers-color-scheme: light)'),coarse=matchMedia('(pointer: coarse)'),light=lm.matches;
+var W=0,H=0,D=1,mob=false,P=['124,92,255','34,211,238','255,79,216'],CS=[],G=[],Y=[];
+var ac=d.createElement('canvas'),ax=ac.getContext('2d');
+var dust=[],orbs=[],motes=[],sparks=[],rings=[],stars=[],trail=[];
+var mx=-9999,my=-9999,pcx=0,pcy=0,ms=0,smx=0,smy=0;
+var tx=0,ty=0,cx=0,cy=0,hov=0,kick=0,rate=1,lastT=0;
+var an=yy&&yy.getAnimations?yy.getAnimations()[0]:null;
+var sy=scrollY,q=2,slowT=0,t00=performance.now(),last=t00,nextStar=2.2,off=false;
+function rnd(a,b){return b===undefined?Math.random()*a:a+Math.random()*(b-a)}
+function clamp(n,a,b){return n<a?a:n>b?b:n}
+function wrap(v,m){return((v%m)+m)%m}
+function glow(rgb){var c=d.createElement('canvas');c.width=c.height=128;var g=c.getContext('2d'),r=g.createRadialGradient(64,64,0,64,64,64);
+r.addColorStop(0,'rgba('+rgb+',1)');r.addColorStop(.25,'rgba('+rgb+',.5)');r.addColorStop(.6,'rgba('+rgb+',.14)');r.addColorStop(1,'rgba('+rgb+',0)');
+g.fillStyle=r;g.fillRect(0,0,128,128);return c}
+function yinyang(rgb){var s=96,R=44,c=d.createElement('canvas');c.width=c.height=s;var g=c.getContext('2d');g.translate(s/2,s/2);
+g.fillStyle='rgb('+rgb+')';g.beginPath();g.arc(0,0,R,0,6.2832);g.fill();
+g.globalCompositeOperation='destination-out';
+g.beginPath();g.arc(0,0,R,-1.5708,1.5708,false);g.arc(0,R/2,R/2,1.5708,4.7124,false);g.arc(0,-R/2,R/2,1.5708,-1.5708,true);g.closePath();g.fill();
+g.beginPath();g.arc(0,-R/2,R*.14,0,6.2832);g.fill();
+g.globalCompositeOperation='source-over';
+g.beginPath();g.arc(0,R/2,R*.14,0,6.2832);g.fill();
+g.strokeStyle='rgba('+rgb+',.9)';g.lineWidth=2.6;g.beginPath();g.arc(0,0,R,0,6.2832);g.stroke();
+return c}
+function theme(){light=lm.matches;var cs=getComputedStyle(d.documentElement),i,v;
+for(i=0;i<3;i++){v=(cs.getPropertyValue('--p'+(i+1))||'').replace(/\s/g,'');if(/^\d+,\d+,\d+$/.test(v))P[i]=v}
+for(i=0;i<3;i++){CS[i]='rgb('+P[i]+')';G[i]=glow(P[i]);Y[i]=yinyang(P[i])}}
+theme();if(lm.addEventListener)lm.addEventListener('change',theme);
+function mkDust(init){var z=rnd(.2,1);return{x:rnd(W),y:init?rnd(H):H+rnd(20),z:z,vx:rnd(-.5,.5)*28*z,vy:-rnd(6,22)*z,ix:0,iy:0,r:.7+z*1.8,ph:rnd(6.28),ts:rnd(.6,2.2),a:.4+z*.55,c:(Math.random()*3)|0,X:0,Y:0,al:0}}
+function mkOrb(i){return{bx:rnd(W),by:rnd(H),r:rnd(90,190)*(mob?.7:1),z:rnd(.15,.5),ph:rnd(6.28),sp:rnd(.04,.1),a:rnd(.07,.13),c:i%3}}
+function mkMote(i){var z=rnd(.3,.9);return{x:rnd(W),y:rnd(H),z:z,s:rnd(15,32)*(.6+z*.6),rot:rnd(6.28),vr:rnd(-.5,.5),vx:rnd(-6,6)*z,vy:-rnd(3,10)*z,ix:0,iy:0,a:rnd(.16,.3),c:i%3,X:0,Y:0}}
+function size(){W=innerWidth;H=innerHeight;mob=W<700||coarse.matches;D=Math.min(devicePixelRatio||1,(mob||q<2)?1.5:2);
+cv.width=Math.round(W*D);cv.height=Math.round(H*D);x.setTransform(D,0,0,D,0,0);
+ac.width=Math.max(48,Math.ceil(W/8));ac.height=Math.max(48,Math.ceil(H/8));
+var nd=mob?46:clamp(Math.round(W*H/15000),64,130);if(q===0)nd=Math.round(nd*.6);
+while(dust.length<nd)dust.push(mkDust(true));dust.length=Math.min(dust.length,nd);
+var no=mob?3:5;while(orbs.length<no)orbs.push(mkOrb(orbs.length));orbs.length=Math.min(orbs.length,no);
+var nm=mob?3:7;while(motes.length<nm)motes.push(mkMote(motes.length));motes.length=Math.min(motes.length,nm)}
+function aurora(t,sh){var aw=ac.width,ah=ac.height,r,i,u,y0,amp,th,gr,yv,pts=26;
+ax.globalCompositeOperation='source-over';ax.clearRect(0,0,aw,ah);ax.globalCompositeOperation='lighter';
+for(r=0;r<3;r++){y0=ah*(.14+r*.17)+sh;amp=ah*(.075+r*.012);th=ah*(.3+r*.04);
+gr=ax.createLinearGradient(0,y0-amp*1.6,0,y0+th+amp);
+gr.addColorStop(0,'rgba('+P[r]+',0)');gr.addColorStop(.32,'rgba('+P[r]+',.8)');gr.addColorStop(1,'rgba('+P[r]+',0)');
+ax.fillStyle=gr;ax.beginPath();
+for(i=0;i<=pts;i++){u=i/pts;yv=y0+Math.sin(u*3.1+t*(.22+r*.06)+r*1.7)*amp+Math.sin(u*6.8-t*.37+r*2.3)*amp*.45;if(i===0)ax.moveTo(0,yv);else ax.lineTo(u*aw,yv)}
+for(i=pts;i>=0;i--){u=i/pts;yv=y0+th*(.8+.2*Math.sin(u*4+t*.3+r))+Math.sin(u*3.1+t*(.22+r*.06)+r*1.7)*amp*.6;ax.lineTo(u*aw,yv)}
+ax.closePath();ax.fill()}}
+function shoot(){var dir=Math.random()<.5?1:-1,ang=rnd(.5,.85),sp=rnd(750,1150);
+stars.push({x:dir>0?rnd(-60,W*.5):rnd(W*.5,W+60),y:rnd(-30,H*.4),vx:Math.cos(ang)*sp*dir,vy:Math.sin(ang)*sp,sp:sp,l:0,m:rnd(.7,1.15),tl:rnd(150,280),c:(Math.random()*3)|0})}
+function burst(px,py,n,sp,small){for(var k=0;k<n&&sparks.length<240;k++){var a=rnd(6.2832),v=sp*rnd(.35,1);
+sparks.push({x:px,y:py,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:0,m:rnd(.45,1),r:small?rnd(.7,1.2):rnd(1,2.1),c:(Math.random()*3)|0})}}
+function impulse(px,py,rad,pw){var all=dust.concat(motes),k,p,dx,dy,dd;
+for(k=0;k<all.length;k++){p=all[k];dx=p.X-px;dy=p.Y-py;dd=Math.sqrt(dx*dx+dy*dy);
+if(dd<rad&&dd>1){var f=(1-dd/rad)*pw;p.ix+=dx/dd*f;p.iy+=dy/dd*f}}}
+F.pulse=function(px,py){if(off||F.calm||F.level<2)return;rings.push({x:px,y:py,l:0,R:120,c:1});burst(px,py,10,150)};
+function frame(now){
+requestAnimationFrame(frame);
+if(d.hidden){last=now;return}
+var dt=Math.min((now-last)/1000,.05);last=now;if(dt<=0)return;
+var L=F.level,calm=F.calm,vm=calm?.4:1;
+/* hero: tilt + kecepatan putar yin-yang */
+cx+=(tx+Math.sin(now/1700)*4-cx)*.08;cy+=(ty+Math.cos(now/2300)*5-cy)*.08;
+tilt.style.transform='rotateX('+cx.toFixed(2)+'deg) rotateY('+cy.toFixed(2)+'deg)';
+kick*=.96;rate+=(1+hov*4+kick-rate)*.08;if(an)an.updatePlaybackRate(rate);
+if(L===0){if(!off){x.clearRect(0,0,W,H);off=true}return}
+off=false;
+slowT=dt>.04?slowT+dt:Math.max(0,slowT-dt*2);
+if(slowT>3&&q>0&&now-t00>4000){q--;slowT=0;d.documentElement.classList.add('lite');if(q<2)size()}
+var Q=Math.min(q,L),t=now/1000;
+var svel=calm?0:scrollY-sy;sy+=(scrollY-sy)*Math.min(1,dt*8);
+var streak=clamp(svel*.35,-46,46),has=mx>-999,k8=Math.min(1,dt*14);
+ms+=((has?1:0)-ms)*Math.min(1,dt*6);
+if(has){smx+=(mx-smx)*k8;smy+=(my-smy)*k8}
+var par=calm?0:1;
+pcx+=((has?mx/W-.5:0)-pcx)*Math.min(1,dt*2.5);pcy+=((has?my/H-.5:0)-pcy)*Math.min(1,dt*2.5);
+x.clearRect(0,0,W,H);
+var ex=Math.exp(-dt*2.2),add=light?'source-over':'lighter',i,j,p,o,dx,dy,dd,dist,f,X,Y2,a,k;
+/* 1. aurora + orb bokeh */
+if(Q>=2){aurora(t,Math.sin(sy*.0016)*ac.height*.05);
+x.globalCompositeOperation=add;x.globalAlpha=light?.1:.3;x.imageSmoothingEnabled=true;x.drawImage(ac,0,0,W,H);
+for(i=0;i<orbs.length;i++){o=orbs[i];
+X=o.bx+Math.sin(t*o.sp+o.ph)*90+pcx*120*o.z*par;
+Y2=wrap(o.by+Math.cos(t*o.sp*1.3+o.ph)*70-sy*o.z*.22*par+o.r,H+o.r*2)-o.r;
+x.globalAlpha=o.a*(light?.7:1)*(.75+.25*Math.sin(t*.45+o.ph));
+x.drawImage(G[o.c],X-o.r,Y2-o.r,o.r*2,o.r*2)}}
+x.globalCompositeOperation=add;
+if(ms>.02&&Q>=1){x.globalAlpha=.2*ms*(light?.7:1);x.drawImage(G[0],smx-210,smy-210,420,420);x.globalAlpha=.12*ms*(light?.7:1);x.drawImage(G[1],smx-110,smy-110,220,220)}
+/* 2. debu cahaya berwarna */
+x.globalCompositeOperation='source-over';
+var link=[];
+for(i=0;i<dust.length;i++){p=dust[i];
+p.x+=(p.vx*vm+Math.sin(t*.6+p.ph)*5*p.z*vm+p.ix)*dt;p.y+=(p.vy*vm+p.iy)*dt;p.ix*=ex;p.iy*=ex;
+if(p.x<-20)p.x=W+20;else if(p.x>W+20)p.x=-20;
+p.y=wrap(p.y,H+40);
+X=p.x+pcx*46*p.z*par;Y2=wrap(p.y-sy*.16*p.z*par,H+40)-20;
+if(ms>.05){dx=X-mx;dy=Y2-my;dd=dx*dx+dy*dy;
+if(dd<19600&&dd>1){dist=Math.sqrt(dd);f=(1-dist/140);f=f*f*420*ms;
+p.ix+=(dx/dist-dy/dist*.5)*f*dt;p.iy+=(dy/dist+dx/dist*.5)*f*dt}}
+a=p.a*(.6+.4*Math.sin(t*p.ts+p.ph))*(light?.9:1);
+p.X=X;p.Y=Y2;p.al=a;
+x.globalAlpha=a;x.fillStyle=CS[p.c];x.strokeStyle=CS[p.c];
+if(Math.abs(streak)>3&&!calm){x.lineWidth=p.r*1.6;x.lineCap='round';x.beginPath();x.moveTo(X,Y2);x.lineTo(X,Y2+streak*p.z);x.stroke()}
+else{x.beginPath();x.arc(X,Y2,p.r,0,6.2832);x.fill()}
+if(Q>=1&&p.z>.4)link.push(p)}
+/* 3. garis konstelasi berwarna */
+if(Q>=1){var Ld=mob?92:130,L2=Ld*Ld,PH=[new Path2D(),new Path2D(),new Path2D()],pa,pb,s2;
+for(i=0;i<link.length;i++){pa=link[i];
+for(j=i+1;j<link.length;j++){pb=link[j];dx=pa.X-pb.X;if(dx>Ld||dx<-Ld)continue;dy=pa.Y-pb.Y;dd=dx*dx+dy*dy;
+if(dd<L2){s2=1-dd/L2;k=s2>.66?2:s2>.33?1:0;PH[k].moveTo(pa.X,pa.Y);PH[k].lineTo(pb.X,pb.Y)}}}
+x.strokeStyle=CS[1];x.lineWidth=.9;x.lineCap='butt';
+x.globalAlpha=.12*(light?1.2:1);x.stroke(PH[0]);x.globalAlpha=.22*(light?1.2:1);x.stroke(PH[1]);x.globalAlpha=.34*(light?1.2:1);x.stroke(PH[2]);
+if(ms>.05){x.strokeStyle=CS[0];x.lineWidth=1;var nl=0;
+for(i=0;i<link.length&&nl<14;i++){pa=link[i];dx=pa.X-smx;dy=pa.Y-smy;dd=dx*dx+dy*dy;
+if(dd<22500){x.globalAlpha=(1-dd/22500)*.5*ms;x.beginPath();x.moveTo(pa.X,pa.Y);x.lineTo(smx,smy);x.stroke();nl++}}}}
+/* 4. kilau */
+x.globalCompositeOperation=add;
+if(Q>=1){for(i=0;i<dust.length;i++){p=dust[i];if(p.z>.55){x.globalAlpha=p.al*.85;k=p.r*11;x.drawImage(G[p.c],p.X-k/2,p.Y-k/2,k,k)}}}
+x.globalCompositeOperation='source-over';
+/* 5. yin-yang melayang */
+if(Q>=1){for(i=0;i<motes.length;i++){o=motes[i];
+o.x+=(o.vx*vm+o.ix)*dt;o.y+=(o.vy*vm+o.iy)*dt;o.ix*=ex;o.iy*=ex;o.rot+=o.vr*dt*vm;
+if(o.x<-50)o.x=W+50;else if(o.x>W+50)o.x=-50;
+o.y=wrap(o.y,H+80);
+X=o.x+pcx*70*o.z*par;Y2=wrap(o.y-sy*.2*o.z*par,H+80)-40;o.X=X;o.Y=Y2;
+if(ms>.05){dx=X-mx;dy=Y2-my;dd=dx*dx+dy*dy;if(dd<25600&&dd>1){dist=Math.sqrt(dd);f=(1-dist/160);f=f*f*200*ms;o.ix+=dx/dist*f*dt;o.iy+=dy/dist*f*dt}}
+x.save();x.translate(X,Y2);x.rotate(o.rot);x.globalAlpha=o.a*(light?.95:1)*(.8+.2*Math.sin(t*.8+o.rot*2));
+x.drawImage(Y[o.c],-o.s/2,-o.s/2,o.s,o.s);x.restore()}}
+/* 6. bintang jatuh berwarna */
+if(Q>=2&&!calm){nextStar-=dt;if(nextStar<=0){nextStar=rnd(4,9);shoot()}
+for(i=stars.length-1;i>=0;i--){o=stars[i];o.l+=dt;if(o.l>o.m){stars.splice(i,1);continue}
+o.x+=o.vx*dt;o.y+=o.vy*dt;var fade=Math.sin(o.l/o.m*3.1416),ux=o.vx/o.sp,uy=o.vy/o.sp,gr;
+gr=x.createLinearGradient(o.x,o.y,o.x-ux*o.tl,o.y-uy*o.tl);gr.addColorStop(0,'rgba('+P[o.c]+',1)');gr.addColorStop(1,'rgba('+P[o.c]+',0)');
+x.globalAlpha=fade*(light?.7:1);x.strokeStyle=gr;x.lineWidth=2;x.lineCap='round';x.beginPath();x.moveTo(o.x,o.y);x.lineTo(o.x-ux*o.tl,o.y-uy*o.tl);x.stroke();
+x.globalCompositeOperation=add;x.globalAlpha=fade*.9;x.drawImage(G[o.c],o.x-13,o.y-13,26,26);x.globalCompositeOperation='source-over'}}
+/* 7. ekor komet kursor */
+if(Q>=2&&!calm&&trail.length){x.globalCompositeOperation=add;x.lineCap='round';
+for(i=trail.length-1;i>=0;i--){trail[i].l+=dt;if(trail[i].l>.5)trail.splice(i,1)}
+for(i=1;i<trail.length;i++){o=trail[i];a=1-o.l/.5;x.globalAlpha=a*.85;x.strokeStyle=CS[i%3===0?2:(i%2)];x.lineWidth=1+a*3.4;x.beginPath();x.moveTo(trail[i-1].x,trail[i-1].y);x.lineTo(o.x,o.y);x.stroke()}
+x.globalCompositeOperation='source-over'}
+/* 8. cincin klik + percikan */
+for(i=rings.length-1;i>=0;i--){o=rings[i];o.l+=dt;if(o.l>.95){rings.splice(i,1);continue}
+k=o.l/.95;x.globalAlpha=(1-k)*(1-k)*.7;x.strokeStyle=CS[o.c];x.lineWidth=2*(1-k)+.5;x.beginPath();x.arc(o.x,o.y,k*o.R,0,6.2832);x.stroke()}
+x.globalCompositeOperation=add;var dmp=Math.exp(-dt*3.2);
+for(i=sparks.length-1;i>=0;i--){o=sparks[i];o.l+=dt;if(o.l>o.m){sparks.splice(i,1);continue}
+o.x+=o.vx*dt;o.y+=o.vy*dt;o.vx*=dmp;o.vy*=dmp;
+x.globalAlpha=(1-o.l/o.m)*.95;x.fillStyle=CS[o.c];x.beginPath();x.arc(o.x,o.y,o.r,0,6.2832);x.fill();
+x.globalAlpha=(1-o.l/o.m)*.5;x.drawImage(G[o.c],o.x-o.r*4,o.y-o.r*4,o.r*8,o.r*8)}
+x.globalAlpha=1;x.globalCompositeOperation='source-over'}
+addEventListener('pointermove',function(e){mx=e.clientX;my=e.clientY;var b=stage.getBoundingClientRect();
+ty=clamp((e.clientX-b.left-b.width/2)/(W/2),-1,1)*18;tx=-clamp((e.clientY-b.top-b.height/2)/(H/2),-1,1)*18;
+if(F.level>0&&!F.calm){trail.push({x:mx,y:my,l:0});if(trail.length>30)trail.shift();
+if(e.pointerType==='mouse'&&e.timeStamp-lastT>40){lastT=e.timeStamp;burst(mx,my,1,60,true)}}},{passive:true});
+d.documentElement.addEventListener('pointerleave',function(){mx=my=-9999});
+addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')mx=my=-9999},{passive:true});
+addEventListener('pointercancel',function(){mx=my=-9999},{passive:true});
+addEventListener('click',function(e){if(F.level===0)return;var on=stage.contains(e.target);
+burst(e.clientX,e.clientY,on?34:20,on?280:220);rings.push({x:e.clientX,y:e.clientY,l:0,R:on?230:170,c:1});rings.push({x:e.clientX,y:e.clientY,l:0,R:on?150:110,c:0});
+impulse(e.clientX,e.clientY,on?340:260,on?440:320);if(on)kick=14});
+stage.addEventListener('pointerenter',function(){hov=1});stage.addEventListener('pointerleave',function(){hov=0});
+addEventListener('rxmfx',function(){d.documentElement.classList.remove('lite');theme();q=2;slowT=0;t00=performance.now();size()});
+addEventListener('resize',size);size();requestAnimationFrame(frame);
+})();
+})();
+</script>
+<script>
+(function(){
+var d=document,h=d.documentElement,R=matchMedia('(prefers-reduced-motion: reduce)').matches;
+try{
+var q=d.getElementById('q');
+addEventListener('keydown',function(e){var t=(d.activeElement||{}).tagName||'';if(e.key==='/'&&!/input|textarea/i.test(t)){e.preventDefault();q.focus()}else if(e.key==='Escape'&&d.activeElement===q)q.blur()});
+var hd=d.querySelector('header.top');function hs(){hd.classList.toggle('sc',scrollY>8)}addEventListener('scroll',hs,{passive:true});hs();
+d.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.btn,.copy,.more');if(!b)return;var r=b.getBoundingClientRect(),z=Math.max(r.width,r.height)*2,i=d.createElement('i');i.className='rip';i.style.cssText='width:'+z+'px;height:'+z+'px;left:'+(e.clientX-r.left-z/2)+'px;top:'+(e.clientY-r.top-z/2)+'px';b.appendChild(i);setTimeout(function(){i.remove()},700)});
+d.querySelectorAll('.tablewrap,.btn').forEach(function(e){e.classList.add('fxc')});
+if(!R){
+d.addEventListener('pointermove',function(e){var t=e.target.closest&&e.target.closest('.fxc');if(t){var r=t.getBoundingClientRect();t.style.setProperty('--mx',(e.clientX-r.left)+'px');t.style.setProperty('--my',(e.clientY-r.top)+'px')}
+var b=e.target.closest&&e.target.closest('.btn');if(b&&e.pointerType==='mouse'){var r2=b.getBoundingClientRect();b.style.setProperty('--tx',((e.clientX-r2.left-r2.width/2)*.18)+'px');b.style.setProperty('--ty',((e.clientY-r2.top-r2.height/2)*.25)+'px')}},{passive:true});
+d.addEventListener('pointerout',function(e){var b=e.target.closest&&e.target.closest('.btn');if(b){b.style.setProperty('--tx','0px');b.style.setProperty('--ty','0px')}});
+}
+d.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a||a.getAttribute('href').length<2)return;var t=d.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));if(!t)return;setTimeout(function(){t.classList.remove('pulse');void t.offsetWidth;t.classList.add('pulse')},380)});
+q.addEventListener('input',function(){d.querySelectorAll('.doc-section').forEach(function(s){s.classList.remove('flt');if(!s.hidden){void s.offsetWidth;s.classList.add('flt')}})});
+var sel='.hero-t > *,.doc-section > h2,.doc-section > h3,.doc-section > p,.doc-section > ul,.doc-section > ol,.doc-section > .tablewrap,.doc-section > .codeblock,.doc-section > blockquote,.doc-section > div';
+var els=[].slice.call(d.querySelectorAll(sel));
+if(!R&&'IntersectionObserver' in window){
+h.classList.add('js');els.forEach(function(e){e.classList.add('rv')});
+var io=new IntersectionObserver(function(es){var k=0;es.forEach(function(en){if(!en.isIntersecting)return;var t=en.target;io.unobserve(t);t.style.transitionDelay=(k++*80)+'ms';t.classList.add('in','seen');setTimeout(function(){t.classList.remove('rv','in');t.style.transitionDelay=''},1100+k*80)})},{threshold:.06,rootMargin:'0px 0px -5% 0px'});
+var iv=setInterval(function(){var l=d.getElementById('rxm-loader');if(!l||l.classList.contains('gone')){clearInterval(iv);els.forEach(function(e){io.observe(e)})}},80);
+}else{els.forEach(function(e){e.classList.add('seen')})}
+}catch(err){h.classList.remove('js')}
+})();
+</script>
+<script>
+(function(){
+var d=document,R=matchMedia('(prefers-reduced-motion: reduce)').matches;
+try{
+d.querySelectorAll('.doc-section > h2').forEach(function(h){
+  for(var c=h.firstChild;c;c=c.nextSibling){
+    if(c.nodeType===3){var m=/^\s*(\d+)\.\s+/.exec(c.nodeValue);if(m){var sp=d.createElement('span');sp.className='num';sp.textContent=('0'+m[1]).slice(-2);c.nodeValue=c.nodeValue.slice(m[0].length);h.insertBefore(sp,c)}break}
+  }
+});
+var tt=d.createElement('div'),tm;tt.className='toast';tt.setAttribute('role','status');d.body.appendChild(tt);
+function toast(m){tt.textContent=m;tt.classList.add('on');clearTimeout(tm);tm=setTimeout(function(){tt.classList.remove('on')},1700)}
+d.addEventListener('click',function(e){
+  var c=e.target.closest&&e.target.closest('.copy,#copyQuick');
+  if(c){setTimeout(function(){if(c.classList.contains('ok')||/copied/i.test(c.textContent))toast('Copied to clipboard')},260);return}
+  var k=e.target.closest&&e.target.closest('code');
+  if(k&&!k.closest('pre')&&navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(k.textContent).then(function(){toast('Copied: '+k.textContent.slice(0,32))},function(){})}
+});
+if(!R){
+  var st=d.getElementById('stage');
+  if(st){var ps=function(){var y=Math.min(scrollY,700),k=y/700;st.style.translate='0 '+(y*.25)+'px';st.style.scale=1-k*.25;st.style.opacity=1-k*.9};addEventListener('scroll',ps,{passive:true});ps()}
+}
+}catch(err){}
+})();
+</script>
+<button class="fab" id="fab" type="button" aria-label="Effects settings" aria-expanded="false" aria-controls="fxp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3.5c.6 3.6 2.9 5.9 6.5 6.5-3.6.6-5.9 2.9-6.5 6.5-.6-3.6-2.9-5.9-6.5-6.5 3.6-.6 5.9-2.9 6.5-6.5z"/><path d="M18 14.5c.3 1.7 1.3 2.7 3 3-1.7.3-2.7 1.3-3 3-.3-1.7-1.3-2.7-3-3 1.7-.3 2.7-1.3 3-3z"/></svg></button>
+<button class="mus" id="mus" type="button" aria-label="Music on/off"><svg class="s0" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg><svg class="s1" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg></button>
+<div class="fxs" id="fxs" aria-hidden="true"></div>
+<div class="fxp" id="fxp" role="dialog" aria-label="Effects settings"><div class="fxh"><h4>Effects</h4><span class="fxb" id="fxb">Ultra</span></div><div class="seg"><button type="button" data-fx="2">Ultra</button><button type="button" data-fx="1">Normal</button><button type="button" data-fx="0">Off</button></div><p id="fxd">Every effect is on: aurora, particles, shooting stars and glow.</p></div>
+<script>
+(function(){
+var d=document,h=d.documentElement,F=window.RXMFX||{level:2,pal:'neon',calm:false,rm:false};
+try{
+h.classList.add('js2');
+function save(k,v){try{localStorage.setItem(k,String(v))}catch(e){}}
+function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+/* --- panel pengatur efek --- */
+var fab=d.getElementById('fab'),pn=d.getElementById('fxp');
+var sk=d.getElementById('fxs');
+function openP(on){pn.classList.toggle('on',on);if(sk)sk.classList.toggle('on',on);h.classList.toggle('fxopen',on);fab.setAttribute('aria-expanded',on?'true':'false')}
+fab.addEventListener('click',function(e){e.stopPropagation();openP(!pn.classList.contains('on'))});
+d.addEventListener('click',function(e){if(pn.classList.contains('on')&&!pn.contains(e.target)&&!fab.contains(e.target))openP(false)});
+d.addEventListener('keydown',function(e){if(e.key==='Escape')openP(false)});
+var FXD={2:'Every effect is on: aurora, particles, shooting stars and glow.',1:'Fewer effects. A good balance for most phones.',0:'No background animation. Fastest, and it saves battery.'},FXN={2:'Ultra',1:'Normal',0:'Off'};
+function mark(){[].forEach.call(pn.querySelectorAll('[data-fx]'),function(b){b.classList.toggle('on',+b.getAttribute('data-fx')===F.level)});
+var sg=pn.querySelector('.seg');if(sg)sg.style.setProperty('--i',2-F.level);
+var bd=d.getElementById('fxb'),ds=d.getElementById('fxd');if(bd)bd.textContent=FXN[F.level];if(ds)ds.textContent=FXD[F.level]}
+mark();
+var stm;addEventListener('scroll',function(){h.classList.add('scrolling');clearTimeout(stm);stm=setTimeout(function(){h.classList.remove('scrolling')},650)},{passive:true});
+/* --- mesin ketik di hero --- */
+var tc=d.getElementById('termcode'),S=['local Window = Library:CreateWindow({\n    Name = "My Hub",\n    KeySystem = true,\n    KeySettings = { Key = { "RXM-1234" } },\n})','local ok = Library:KeySystem({\n    KeyLink = "https://example.com/key",\n    Discord = "https://discord.gg/rxm",\n})\nif not ok then return end'];
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function hl(s){return esc(s).replace(/("[^"\n]*"?)|(--[^\n]*)|\b(local|function|then|end|if|not|return)\b|\b(\d+)\b|\b([A-Za-z_]\w*)(?=\()|\b(Library|Window)\b/g,function(m,a,b,c,n,f,l){
+return a?'<span class="tk-str">'+a+'</span>':b?'<span class="tk-com">'+b+'</span>':c?'<span class="tk-kw">'+c+'</span>':n?'<span class="tk-num">'+n+'</span>':f?'<span class="tk-fn">'+f+'</span>':'<span class="tk-bi">'+l+'</span>'})}
+var si=0,pos=0,dir=1,tm=0,go=false;
+function render(t){tc.innerHTML=hl(t)}
+function tick(){clearTimeout(tm);if(!(F.level>0&&!F.calm)){render(S[0]);return}
+var s=S[si];
+if(dir===1){pos++;render(s.slice(0,pos));if(pos>=s.length){dir=0;tm=setTimeout(tick,2800);return}tm=setTimeout(tick,s.charAt(pos-1)==='\n'?240:20+Math.random()*28)}
+else if(dir===0){dir=-1;tm=setTimeout(tick,10)}
+else{pos=Math.max(0,pos-3);render(s.slice(0,pos));if(pos<=0){dir=1;si=(si+1)%S.length;tm=setTimeout(tick,420);return}tm=setTimeout(tick,12)}}
+render(S[0]);
+var iv=setInterval(function(){var l=d.getElementById('rxm-loader');if(!l||l.classList.contains('gone')){clearInterval(iv);go=true;pos=0;dir=1;tick()}},100);
+/* --- klik panel --- */
+pn.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+var f=b.getAttribute('data-fx');
+if(f!==null){F.level=+f;F.calm=!!F.rm&&F.level<2;h.setAttribute('data-fx',F.level);h.classList.toggle('calm',F.calm);save('rxm.fx',F.level)}
+mark();dispatchEvent(new Event('rxmfx'));if(go){pos=0;dir=1;tick()}});
+/* --- nav mobile (chip) --- */
+var mn=d.getElementById('mnav'),tocLinks=[].slice.call(d.querySelectorAll('#toc a'));
+mn.innerHTML=tocLinks.map(function(a){return'<a href="'+a.getAttribute('href')+'">'+a.textContent.replace(/^\d+\.\s*/,'')+'</a>'}).join('');
+var ml=[].slice.call(mn.children),secs=[].slice.call(d.querySelectorAll('.doc-section')),raf=0,lastCur=-1;
+function act(){raf=0;var cur=0;secs.forEach(function(s,i){if(!s.hidden&&s.getBoundingClientRect().top<=130)cur=i});
+if(cur===lastCur)return;lastCur=cur;ml.forEach(function(a,i){a.classList.toggle('on',i===cur)});
+var a=ml[cur];if(a&&mn.offsetParent)mn.scrollTo({left:a.offsetLeft-mn.clientWidth/2+a.clientWidth/2,behavior:'smooth'})}
+addEventListener('scroll',function(){if(!raf)raf=requestAnimationFrame(act)},{passive:true});act();
+/* --- denyut energi saat judul muncul --- */
+if('IntersectionObserver' in window){var hp=new IntersectionObserver(function(es){es.forEach(function(en){if(!en.isIntersecting)return;hp.unobserve(en.target);var r=en.target.getBoundingClientRect();if(F.pulse)F.pulse(r.left+26,r.top+18)})},{rootMargin:'0px 0px -55% 0px'});
+[].forEach.call(d.querySelectorAll('.doc-section > h2'),function(e){hp.observe(e)})}
+/* --- info mode hemat gerak --- */
+if(F.rm&&load('rxm.fx')===null&&!load('rxm.hint')){var t=d.createElement('div');t.className='toast';t.textContent='Reduced motion is on, so effects are calm. Tap the sparkle button to change.';d.body.appendChild(t);
+setTimeout(function(){t.classList.add('on')},1800);setTimeout(function(){t.classList.remove('on')},8500);save('rxm.hint',1)}
+}catch(err){try{console.warn('ultra ui',err)}catch(e){}}
+})();
+</script>
+<script>
+/* background music: starts when the loading screen is ready, loops, button toggles it */
+(function(){try{
+var a=new Audio('https://www.image2url.com/r2/default/audio/1792811790895-e1ff1054-293a-4779-8230-a987f5e38457.mp3');
+a.loop=true;a.preload='auto';a.volume=.45;
+var b=document.getElementById('mus'),want=true,ready=false,unl=false,evs=['pointerdown','touchstart','keydown','click'];
+try{if(localStorage.getItem('rxm.music')==='0')want=false}catch(e){}
+function ui(){var on=!a.paused&&!a.muted;b.classList.toggle('on',on);b.title=on?'Music on':'Music off'}
+function play(){if(!want)return;var p=a.play();if(p&&p.catch)p.catch(function(){})}
+function stop(){evs.forEach(function(n){removeEventListener(n,first,true)})}
+function first(e){
+ if(e.target&&e.target.closest&&e.target.closest('#mus'))return;
+ if(!ready){ /* unlock audio silently on the first tap during loading (needed on iPhone/Safari) */
+  if(unl)return;unl=true;a.muted=true;var p=a.play();
+  if(p&&p.then)p.then(function(){if(ready&&want){a.muted=false}else{a.pause();a.currentTime=0;a.muted=false}ui()}).catch(function(){a.muted=false;unl=false});
+  return}
+ play()}
+evs.forEach(function(n){addEventListener(n,first,true)});
+a.onplay=a.onpause=function(){ui();if(ready&&!a.paused&&!a.muted)stop()};ui();
+function onReady(){if(ready)return;ready=true;a.muted=false;play();ui()}
+var iv=setInterval(function(){var l=document.getElementById('rxm-loader');if(!l||l.classList.contains('gone')){clearInterval(iv);onReady()}},100);
+b.addEventListener('click',function(){
+ if(a.paused){want=true;a.muted=false;ready=true;play()}else{want=false;a.pause()}
+ try{localStorage.setItem('rxm.music',want?'1':'0')}catch(e){}
+ stop();ui()});
+document.addEventListener('visibilitychange',function(){if(document.hidden)a.pause();else if(ready)play()});
+}catch(err){try{console.warn('music',err)}catch(e){}}})();
+</script>
+<script>
+/* extra effects layer: cursor light, tap sparks, hero intro, code scan, staggered lists */
+(function(){try{
+var d=document,h=d.documentElement;
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+var L=function(){return +h.getAttribute('data-fx')||0},$=function(s,r){return [].slice.call((r||d).querySelectorAll(s))},
+loading=function(){return !!d.getElementById('rxm-loader')};
+$('.doc-section ul').forEach(function(u){$('li',u).slice(0,14).forEach(function(li,i){li.style.setProperty('--i',i)})});
+/* cursor / touch light that follows with inertia */
+var sp=d.createElement('div');sp.className='x2-spot';d.body.appendChild(sp);
+var tx=0,ty=0,cx=0,cy=0,run=false,tm;
+function tick(){cx+=(tx-cx)*.14;cy+=(ty-cy)*.14;sp.style.transform='translate3d('+cx+'px,'+cy+'px,0)';
+ if(Math.abs(tx-cx)+Math.abs(ty-cy)>.5)requestAnimationFrame(tick);else run=false}
+function mv(e){if(e.pointerType&&e.pointerType!='mouse')return;if(!L()||loading())return;tx=e.clientX;ty=e.clientY;
+ if(!sp.classList.contains('on')){cx=tx;cy=ty}sp.classList.add('on');clearTimeout(tm);
+ tm=setTimeout(function(){sp.classList.remove('on')},e.pointerType=='mouse'?60000:1500);
+ if(!run){run=true;requestAnimationFrame(tick)}}
+addEventListener('pointermove',mv,{passive:true});
+/* tap / click burst: ring + sparks */
+function burst(e){mv(e);if(L()<1||loading())return;var x=e.clientX,y=e.clientY,n=L()>1?12:6,T=function(a,b){return 'translate('+a+'px,'+b+'px)'};
+ var r=d.createElement('i');r.className='x2-ring';d.body.appendChild(r);
+ r.animate([{transform:T(x,y)+' scale(1)',opacity:.9},{transform:T(x,y)+' scale(9)',opacity:0}],{duration:720,easing:'cubic-bezier(.2,.8,.2,1)'}).onfinish=function(){r.remove()};
+ for(var i=0;i<n;i++){(function(){var s=d.createElement('i'),a=Math.PI*2*i/n+Math.random()*.5,k=38+Math.random()*54;s.className='x2-sp';d.body.appendChild(s);
+  s.animate([{transform:T(x,y)+' scale(1)',opacity:1},{transform:T(x+Math.cos(a)*k,y+Math.sin(a)*k+18)+' scale(0)',opacity:0}],{duration:520+Math.random()*380,easing:'cubic-bezier(.1,.7,.3,1)'}).onfinish=function(){s.remove()}})()}}
+addEventListener('click',burst,{passive:true});
+/* hero intro once the loading screen is done */
+var iv=setInterval(function(){if(loading())return;clearInterval(iv);
+ if(!L())return;
+ var st=d.getElementById('stage');
+ if(st&&st.animate)st.animate([{filter:'blur(22px) brightness(2.4)',rotate:'-30deg'},{filter:'blur(0px) brightness(1)',rotate:'0deg'}],{duration:1700,delay:80,easing:'cubic-bezier(.2,.8,.2,1)'});
+ var t=d.querySelector('.hero-t h1');
+ if(t&&t.animate){var ls=getComputedStyle(t).letterSpacing;if(ls=='normal')ls='0px';
+  t.animate([{letterSpacing:'.22em',filter:'blur(14px)',clipPath:'inset(-20% 100% -20% -5%)'},{letterSpacing:ls,filter:'blur(0px)',clipPath:'inset(-20% -5% -20% -5%)'}],{duration:1500,delay:180,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'})}
+},80);
+}catch(err){}})();
+</script>
+<script>
+/* search polish: rotating hints in the placeholder, faster light while typing, chip stagger */
+(function(){try{
+var d=document,h=d.documentElement,q=d.getElementById('q');if(!q)return;
+var box=q.closest('.search');
+q.addEventListener('input',function(){box.classList.toggle('has',!!q.value)});
+d.querySelectorAll('#mnav a').forEach(function(a,i){a.style.setProperty('--i',Math.min(i,12))});
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+var T=['Search the guide...','Try: key system','Try: loading screen','Try: Dynamic Island','Try: icons and fonts','Try: CreateWindow'],ti=0,ci=0,del=0,hold=0;
+(function step(){
+ var ok=!d.hidden&&d.activeElement!==q&&!q.value&&(+h.getAttribute('data-fx')||0)>0&&!d.getElementById('rxm-loader');
+ if(ok){var t=T[ti];
+  if(hold){hold--}else if(!del){ci++;if(ci>=t.length){ci=t.length;del=1;hold=26}}else{ci-=2;if(ci<=0){ci=0;del=0;ti=(ti+1)%T.length}}
+  q.placeholder=t.slice(0,ci)+'|'}
+ else if(d.activeElement===q||q.value){q.placeholder='Search the guide...'}
+ setTimeout(step,ok?55:400)})();
+}catch(e){}})();
+</script>
+<script>
+(function(){try{
+document.querySelectorAll('.doc-section>h2').forEach(function(h){
+ if(h.querySelector('.ht'))return;var s=document.createElement('span');s.className='ht';
+ [].slice.call(h.childNodes).forEach(function(n){if(n.nodeType==1&&(n.classList.contains('num')||n.classList.contains('anchor')))return;s.appendChild(n)});
+ h.appendChild(s)});
+}catch(e){}})();
+</script>
+</body>
+</html>
